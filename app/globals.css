@@ -1,0 +1,101 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --primary: 198 100 97;
+  --secondary: 236 161 122;
+  --accent: 166 130 176;
+  --accent-2: 201 114 69;
+  --accent-3: 184 114 116;
+}
+
+@layer base {
+  body {
+    @apply bg-white text-gray-900 dark:bg-gray-950 dark:text-gray-200 transition-colors duration-200;
+  }
+}
+
+@layer components {
+  .gradient-text {
+    @apply bg-gradient-to-r from-[#c66461] via-[#a682b0] to-[#eca17a] bg-clip-text text-transparent;
+  }
+
+  .gradient-bg {
+    @apply bg-gradient-to-r from-[#c66461]/90 via-[#a682b0]/90 to-[#eca17a]/90;
+  }
+
+  .section-padding {
+    @apply py-20 px-4 md:px-8 lg:px-16 max-w-7xl mx-auto;
+  }
+
+  .card-hover {
+    @apply transition-all duration-300 hover:shadow-lg hover:-translate-y-1;
+  }
+
+  .btn-primary {
+    @apply px-6 py-3 bg-[#c66461] hover:bg-[#c66461]/90 text-white rounded-md transition-all duration-300 font-medium;
+  }
+
+  .btn-secondary {
+    @apply px-6 py-3 border-2 border-[#a682b0] text-[#a682b0] hover:bg-[#a682b0]/10 rounded-md transition-all duration-300 font-medium dark:text-gray-200 dark:border-[#a682b0]/70 dark:hover:bg-[#a682b0]/20;
+  }
+}
+
+.animate-fade-in {
+  animation: fadeIn 1s ease-in-out;
+}
+
+.animate-slide-up {
+  animation: slideUp 0.8s ease-out;
+}
+
+.animate-slide-in-right {
+  animation: slideInRight 0.8s ease-out;
+}
+
+.animate-slide-in-left {
+  animation: slideInLeft 0.8s ease-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes slideUp {
+  from {
+    transform: translateY(50px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+@keyframes slideInRight {
+  from {
+    transform: translateX(50px);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+@keyframes slideInLeft {
+  from {
+    transform: translateX(-50px);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
