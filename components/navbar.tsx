@@ -79,7 +79,7 @@ export default function Navbar() {
       className={`fixed top-4 left-4 right-4 mx-auto z-50 max-w-3xl md:max-w-4xl transition-all duration-300 ease-out 
         ${scrolled 
           ? "bg-white/80 dark:bg-gray-900/80 backdrop-blur-lg shadow-md rounded-lg border border-gray-200/50 dark:border-gray-700/50"
-          : "bg-transparent shadow-none rounded-none border-none" 
+          : "bg-transparent shadow-none rounded-lg border border-gray-200/30 dark:border-gray-700/30" 
         } 
         ${isOpen ? "rounded-b-none md:rounded-b-lg" : ""}
       `}
