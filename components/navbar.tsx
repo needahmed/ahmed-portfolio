@@ -76,7 +76,7 @@ export default function Navbar() {
       variants={navVariants}
       initial="hidden"
       animate="visible"
-      className={`fixed top-4 left-4 right-4 mx-auto z-50 max-w-3xl md:max-w-4xl transition-all duration-300 ease-out 
+      className={`fixed top-4 inset-x-0 mx-auto z-50 max-w-4xl transition-all duration-300 ease-out 
         ${scrolled 
           ? "bg-white/80 dark:bg-gray-900/80 backdrop-blur-lg shadow-md rounded-lg border border-gray-200/50 dark:border-gray-700/50"
           : "bg-transparent shadow-none rounded-lg border border-gray-200/30 dark:border-gray-700/30" 
@@ -85,18 +85,10 @@ export default function Navbar() {
       `}
     >
       <div className="px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-between items-center h-16">
-          <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.98 }}>
-            <Link
-              href="/"
-              className="text-2xl font-bold bg-gradient-to-r from-[#c66461] via-[#a682b0] to-[#eca17a] bg-clip-text text-transparent transition-transform duration-200 inline-block"
-              onClick={() => isOpen && setIsOpen(false)}
-            >
-              Ahmed<span className="text-gray-500 dark:text-gray-400">.</span>
-            </Link>
-          </motion.div>
+        <div className="flex justify-center items-center h-16">
+          {/* Removed the empty logo div */}
 
-          <div className="hidden md:flex items-center space-x-2 lg:space-x-4">
+          <div className="hidden md:flex items-center justify-center space-x-2 lg:space-x-4">
             {navLinks.map((link) => (
               <motion.div key={link.name} variants={linkHoverVariant} whileHover="hover" whileTap="tap">
                 <Link
@@ -129,7 +121,8 @@ export default function Navbar() {
             </motion.div>
           </div>
 
-          <div className="md:hidden flex items-center space-x-2">
+          <div className="md:hidden flex items-center justify-between w-full">
+            {/* Theme toggle on the left for mobile */}
             <motion.div whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.9 }}>
               <Button
                 variant="ghost"
@@ -141,6 +134,8 @@ export default function Navbar() {
                 {theme === 'light' ? <Moon size={20} /> : <Sun size={20} />}
               </Button>
             </motion.div>
+            
+            {/* Menu toggle on the right for mobile */}
             <motion.button
               onClick={toggleMenu}
               whileTap={{ scale: 0.85 }}
