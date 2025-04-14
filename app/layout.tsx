@@ -16,7 +16,11 @@ export const metadata: Metadata = {
   title: "Ahmed Pervez | Senior Software Engineer",
   description:
     "Portfolio of Ahmed Pervez, a Senior Software Engineer specializing in Full Stack Development with Next.js, React, and Node.js",
-    generator: 'v0.dev'
+  icons: {
+    icon: '/favicon.ico',
+    shortcut: '/favicon.ico',
+    apple: '/apple-touch-icon.png',
+  }
 }
 
 export default function RootLayout({
