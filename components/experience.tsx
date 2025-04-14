@@ -54,7 +54,7 @@ const experiences = [
     id: 2,
     title: "FullStack Developer",
     company: "Virtury Cloud",
-    period: "Aug 2021 - May 2024",
+    period: "Aug 2023 - May 2024",
     description:
       "Developed and launched the company's new website with a full-stack approach, utilizing Next.js, React, and PostgreSQL. Streamlined database workflows with TablePlus and ensured robust API functionality.",
     type: "work",
