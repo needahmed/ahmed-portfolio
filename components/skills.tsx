@@ -2,7 +2,13 @@
 
 import { useRef, useEffect, useState } from "react"
 import { motion, useInView, useAnimation } from "framer-motion"
-import { Code, Database, Blocks, Wrench, Cpu } from "lucide-react"
+import { Code, Database, Blocks, Wrench, Cpu, Cloud, Brain } from "lucide-react"
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip"
 
 const skillCategories = [
   {
@@ -10,11 +16,11 @@ const skillCategories = [
     icon: Code,
     color: "cyan",
     skills: [
-      { name: "React", level: 95 },
-      { name: "Next.js", level: 90 },
-      { name: "TypeScript", level: 85 },
-      { name: "Tailwind CSS", level: 90 },
-      { name: "Framer Motion", level: 85 },
+      { name: "React", experience: "3+ years", projects: "15+ projects", tooltip: "Used in KUPI Dashboard, Strategeaze, SkillSprint" },
+      { name: "Next.js", experience: "3+ years", projects: "12+ projects", tooltip: "Built Virtury Cloud website, KUPI platform, Portfolio" },
+      { name: "TypeScript", experience: "2+ years", projects: "10+ projects", tooltip: "Type-safe development across all major projects" },
+      { name: "Tailwind CSS", experience: "2+ years", projects: "15+ projects", tooltip: "Primary styling solution for modern web apps" },
+      { name: "Framer Motion", experience: "1+ year", projects: "8+ projects", tooltip: "Advanced animations in portfolio and dashboards" },
     ],
   },
   {
@@ -22,11 +28,11 @@ const skillCategories = [
     icon: Database,
     color: "purple",
     skills: [
-      { name: "Node.js", level: 85 },
-      { name: "Express", level: 80 },
-      { name: "Prisma", level: 85 },
-      { name: "PostgreSQL", level: 80 },
-      { name: "MongoDB", level: 80 },
+      { name: "Node.js", experience: "3+ years", projects: "12+ projects", tooltip: "Backend for KUPI Chatbot, APIs, and microservices" },
+      { name: "Express", experience: "2+ years", projects: "8+ projects", tooltip: "RESTful APIs and server-side applications" },
+      { name: "Prisma", experience: "2+ years", projects: "10+ projects", tooltip: "ORM for KUPI routes, database management" },
+      { name: "PostgreSQL", experience: "2+ years", projects: "8+ projects", tooltip: "Primary database for Virtury Cloud, Strategeaze" },
+      { name: "MongoDB", experience: "2+ years", projects: "6+ projects", tooltip: "NoSQL solutions for Pokemon PvP, chatbots" },
     ],
   },
   {
@@ -34,60 +40,60 @@ const skillCategories = [
     icon: Blocks,
     color: "green",
     skills: [
-      { name: "Solidity", level: 75 },
-      { name: "Rust", level: 65 },
-      { name: "ether.js", level: 80 },
-      { name: "web3.js", level: 75 },
-      { name: "Hardhat", level: 70 },
+      { name: "Solidity", experience: "2+ years", projects: "4 contracts", tooltip: "Smart contracts on Ethereum, Alchemy certified" },
+      { name: "Rust", experience: "1+ year", projects: "3 projects", tooltip: "Solana blockchain development, Udemy certified" },
+      { name: "ether.js", experience: "2+ years", projects: "5 projects", tooltip: "Web3 integration for dApps" },
+      { name: "web3.js", experience: "1+ year", projects: "4 projects", tooltip: "Blockchain interactions and wallet connections" },
+      { name: "Hardhat", experience: "1+ year", projects: "4 projects", tooltip: "Smart contract development and testing" },
     ],
   },
   {
-    name: "Tools & Other",
-    icon: Wrench,
+    name: "Cloud & DevOps",
+    icon: Cloud,
     color: "cyan",
     skills: [
-      { name: "Git", level: 85 },
-      { name: "Docker", level: 75 },
-      { name: "AWS", level: 70 },
-      { name: "Python", level: 70 },
-      { name: "C/C++", level: 65 },
+      { name: "AWS", experience: "2+ years", projects: "8+ projects", tooltip: "Lambda, S3, EC2 for KUPI Chatbot, Strategeaze" },
+      { name: "Docker", experience: "2+ years", projects: "6+ projects", tooltip: "Containerization for deployment" },
+      { name: "Git", experience: "4+ years", projects: "All projects", tooltip: "Version control and team collaboration" },
+      { name: "Serverless", experience: "1+ year", projects: "3 projects", tooltip: "Serverless Framework for AWS deployments" },
+    ],
+  },
+  {
+    name: "AI & Tools",
+    icon: Brain,
+    color: "purple",
+    skills: [
+      { name: "OpenAI API", experience: "1+ year", projects: "4 projects", tooltip: "KUPI Chatbot, AI SaaS platform" },
+      { name: "LangChain", experience: "1+ year", projects: "2 projects", tooltip: "AI chatbot development and NLP" },
+      { name: "Python", experience: "2+ years", projects: "5 projects", tooltip: "ML models, data analysis, FastAPI" },
+      { name: "Socket.IO", experience: "2+ years", projects: "3 projects", tooltip: "Real-time features in Pokemon PvP, Strategeaze" },
     ],
   },
 ]
 
 interface AnimatedSkillBarProps {
   name: string
-  level: number
+  experience: string
+  projects: string
+  tooltip: string
   color: string
   delay: number
 }
 
-function AnimatedSkillBar({ name, level, color, delay }: AnimatedSkillBarProps) {
-  const [currentValue, setCurrentValue] = useState(0)
+function AnimatedSkillBar({ name, experience, projects, tooltip, color, delay }: AnimatedSkillBarProps) {
   const controls = useAnimation()
   const ref = useRef(null)
   const isInView = useInView(ref, { once: true, amount: 0.5 })
+  const [isHovered, setIsHovered] = useState(false)
 
   useEffect(() => {
     if (isInView) {
       controls.start({
-        width: `${level}%`,
+        width: "100%",
         transition: { duration: 1.2, ease: "easeOut", delay },
       })
-
-      const interval = setInterval(() => {
-        setCurrentValue((prev) => {
-          if (prev < level) {
-            return Math.min(prev + Math.ceil(level / 40), level)
-          }
-          clearInterval(interval)
-          return level
-        })
-      }, 30)
-      
-      return () => clearInterval(interval)
     }
-  }, [isInView, level, controls, delay])
+  }, [isInView, controls, delay])
 
   const colorClasses = {
     cyan: "from-cyan-500 to-cyan-300",
@@ -96,25 +102,44 @@ function AnimatedSkillBar({ name, level, color, delay }: AnimatedSkillBarProps) 
   }
 
   return (
-    <div ref={ref} className="group">
-      <div className="flex justify-between mb-2">
-        <span className="text-sm font-mono text-gray-300 group-hover:text-cyan-400 transition-colors">
-          {name}
-        </span>
-        <span className="text-xs font-mono text-cyan-400 tabular-nums">
-          {currentValue}%
-        </span>
-      </div>
-      <div className="relative h-2 bg-white/5 rounded-full overflow-hidden">
-        <motion.div
-          className={`absolute top-0 left-0 h-full bg-gradient-to-r ${
-            colorClasses[color as keyof typeof colorClasses]
-          } rounded-full shadow-[0_0_10px_rgba(0,240,255,0.5)]`}
-          initial={{ width: "0%" }}
-          animate={controls}
-        />
-      </div>
-    </div>
+    <TooltipProvider delayDuration={0}>
+      <Tooltip>
+        <TooltipTrigger asChild>
+          <div 
+            ref={ref} 
+            className="group cursor-pointer"
+            onMouseEnter={() => setIsHovered(true)}
+            onMouseLeave={() => setIsHovered(false)}
+          >
+            <div className="flex justify-between mb-2">
+              <span className="text-sm font-mono text-gray-300 group-hover:text-cyan-400 transition-colors font-medium">
+                {name}
+              </span>
+              <div className="flex gap-2 text-xs font-mono text-gray-500">
+                <span className="text-cyan-400">{experience}</span>
+                <span className="text-purple-400">•</span>
+                <span className="text-green-400">{projects}</span>
+              </div>
+            </div>
+            <div className="relative h-2 bg-white/5 rounded-full overflow-hidden">
+              <motion.div
+                className={`absolute top-0 left-0 h-full bg-gradient-to-r ${
+                  colorClasses[color as keyof typeof colorClasses]
+                } rounded-full ${isHovered ? 'shadow-[0_0_15px_rgba(0,240,255,0.8)]' : 'shadow-[0_0_10px_rgba(0,240,255,0.5)]'} transition-shadow duration-300`}
+                initial={{ width: "0%" }}
+                animate={controls}
+              />
+            </div>
+          </div>
+        </TooltipTrigger>
+        <TooltipContent 
+          side="top" 
+          className="bg-gray-900/95 border-cyan-500/30 text-cyan-100 font-mono text-xs max-w-xs"
+        >
+          <p>{tooltip}</p>
+        </TooltipContent>
+      </Tooltip>
+    </TooltipProvider>
   )
 }
 
@@ -145,7 +170,7 @@ export default function Skills() {
             >
               <Cpu className="w-6 h-6 text-green-400" />
             </motion.div>
-            <span className="font-mono text-green-400 text-sm">Technical Expertise</span>
+            <span className="font-mono text-green-400 text-sm">Technical Arsenal</span>
           </div>
 
           <h2 className="text-4xl md:text-5xl font-bold mb-4 font-mono">
@@ -161,19 +186,22 @@ export default function Skills() {
             />
           </div>
 
-          <p className="text-gray-400 max-w-2xl mx-auto">
-            A comprehensive toolkit built through years of hands-on experience in modern web
-            development, blockchain, and cloud technologies.
+          <p className="text-gray-400 max-w-2xl mx-auto mb-2">
+            Technologies I use daily to build scalable, performant products.
+          </p>
+          <p className="text-gray-500 text-sm font-mono">
+            <span className="text-cyan-400">Hover</span> over skills to see project context
           </p>
         </motion.div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-8">
           {skillCategories.map((category, catIndex) => (
             <motion.div
               key={category.name}
               initial={{ opacity: 0, y: 50 }}
               animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 50 }}
               transition={{ duration: 0.5, delay: catIndex * 0.1 }}
+              className={catIndex === skillCategories.length - 1 && skillCategories.length % 2 !== 0 ? "md:col-span-2 lg:col-span-1" : ""}
             >
               <div className="glass-card p-8 h-full hover:shadow-[0_0_30px_rgba(0,240,255,0.2)] transition-all duration-300">
                 <div className="flex items-center gap-3 mb-6">
@@ -208,7 +236,9 @@ export default function Skills() {
                     <AnimatedSkillBar
                       key={skill.name}
                       name={skill.name}
-                      level={skill.level}
+                      experience={skill.experience}
+                      projects={skill.projects}
+                      tooltip={skill.tooltip}
                       color={category.color}
                       delay={0.3 + catIndex * 0.1 + skillIndex * 0.05}
                     />

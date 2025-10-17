@@ -68,14 +68,14 @@ export default function Contact() {
     {
       icon: Mail,
       label: "Email",
-      value: "ahmed@example.com",
-      href: "mailto:ahmed@example.com",
+      value: "needahmedwork@gmail.com",
+      href: "mailto:needahmedwork@gmail.com",
     },
     {
       icon: Phone,
       label: "Phone",
-      value: "+92 XXX XXXXXXX",
-      href: "tel:+92XXXXXXXXX",
+      value: "+92 333 5394643",
+      href: "tel:+923335394643",
     },
     {
       icon: MapPin,
