@@ -1,7 +1,6 @@
 "use client"
 
 import { useEffect, useState, useRef } from "react"
-import Image from "next/image"
 import { motion, useMotionValue, useSpring, useTransform } from "framer-motion"
 import { Download, Mail, Github, Linkedin, Twitter, Terminal, Code2, Sparkles } from "lucide-react"
 
@@ -85,7 +84,7 @@ export default function Hero() {
 
             <div>
               <motion.h1 
-                className="text-5xl md:text-7xl font-bold mb-4 font-mono"
+                className="text-5xl md:text-7xl font-bold mb-4 font-mono whitespace-nowrap"
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 transition={{ delay: 0.3 }}
@@ -190,38 +189,7 @@ export default function Hero() {
               style={{ rotateX, rotateY }}
               className="relative"
             >
-              <div className="relative w-[300px] h-[300px] md:w-[400px] md:h-[400px] lg:w-[500px] lg:h-[500px]">
-                <div className="absolute inset-0 holographic-border rounded-3xl animate-pulse-glow" />
-                
-                <div className="absolute inset-4 rounded-2xl overflow-hidden neon-box">
-                  <Image
-                    src="/ProfilePicture.png"
-                    alt="Ahmed Pervez"
-                    fill
-                    className="object-cover"
-                    priority
-                    sizes="(max-width: 768px) 300px, (max-width: 1024px) 400px, 500px"
-                  />
-                  
-                  <div className="absolute inset-0 bg-gradient-to-tr from-cyan-500/20 via-transparent to-purple-500/20 mix-blend-overlay" />
-                  
-                  <motion.div
-                    className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent"
-                    animate={{
-                      x: ["-100%", "100%"],
-                    }}
-                    transition={{
-                      duration: 3,
-                      repeat: Infinity,
-                      repeatDelay: 2,
-                      ease: "linear",
-                    }}
-                  />
-                </div>
-
-                <div className="absolute -top-4 -right-4 w-24 h-24 bg-cyan-500/20 rounded-full blur-2xl animate-pulse" />
-                <div className="absolute -bottom-4 -left-4 w-32 h-32 bg-purple-500/20 rounded-full blur-2xl animate-pulse" />
-              </div>
+              <CodeAnimation />
             </motion.div>
           </motion.div>
         </div>
@@ -243,6 +211,131 @@ export default function Hero() {
         </motion.div>
       </motion.div>
     </section>
+  )
+}
+
+function CodeAnimation() {
+  const codeLines = [
+    "const developer = {",
+    "  name: 'Ahmed Pervez',",
+    "  role: 'Senior Engineer',",
+    "  skills: ['React', 'Node.js'],",
+    "  passion: 'Building great UX'",
+    "};",
+    "",
+    "function createAmazingThings() {",
+    "  return innovation + creativity;",
+    "}",
+    "",
+    "// Always learning, always coding",
+  ]
+
+  return (
+    <div className="relative w-[300px] h-[300px] md:w-[400px] md:h-[400px] lg:w-[500px] lg:h-[500px]">
+      <div className="absolute inset-0 holographic-border rounded-3xl animate-pulse-glow" />
+      
+      <div className="absolute inset-4 rounded-2xl overflow-hidden glass-card backdrop-blur-xl bg-black/40">
+        <div className="absolute top-0 left-0 right-0 h-10 bg-gradient-to-b from-cyan-500/10 to-transparent border-b border-cyan-500/20 flex items-center px-4 gap-2">
+          <div className="w-3 h-3 rounded-full bg-red-500/70" />
+          <div className="w-3 h-3 rounded-full bg-yellow-500/70" />
+          <div className="w-3 h-3 rounded-full bg-green-500/70" />
+          <span className="ml-2 text-xs text-gray-400 font-mono">~/portfolio.tsx</span>
+        </div>
+        
+        <div className="absolute inset-0 top-10 p-6 font-mono text-sm overflow-hidden">
+          {codeLines.map((line, index) => (
+            <motion.div
+              key={index}
+              initial={{ opacity: 0, x: -20 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ delay: 0.5 + index * 0.1, duration: 0.5 }}
+              className="mb-2 flex items-start"
+            >
+              <span className="text-gray-500 mr-4 select-none min-w-[2ch]">
+                {line && (index + 1)}
+              </span>
+              <span className="text-cyan-400">
+                {line.includes('const') || line.includes('function') ? (
+                  <>
+                    <span className="text-purple-400">
+                      {line.split(' ')[0]}
+                    </span>
+                    {' ' + line.split(' ').slice(1).join(' ')}
+                  </>
+                ) : line.includes('//') ? (
+                  <span className="text-gray-500 italic">{line}</span>
+                ) : line.includes(':') && !line.includes('//') ? (
+                  <>
+                    <span className="text-green-400">
+                      {line.split(':')[0]}
+                    </span>
+                    <span className="text-gray-400">:</span>
+                    <span className="text-orange-400">
+                      {line.split(':').slice(1).join(':')}
+                    </span>
+                  </>
+                ) : (
+                  line
+                )}
+              </span>
+            </motion.div>
+          ))}
+          
+          <motion.div
+            className="inline-block w-2 h-4 bg-cyan-400 ml-1"
+            animate={{ opacity: [1, 0, 1] }}
+            transition={{ duration: 1, repeat: Infinity }}
+          />
+        </div>
+        
+        <div className="absolute inset-0 bg-gradient-to-tr from-cyan-500/10 via-transparent to-purple-500/10 mix-blend-overlay pointer-events-none" />
+        
+        <motion.div
+          className="absolute inset-0 bg-gradient-to-r from-transparent via-cyan-400/10 to-transparent pointer-events-none"
+          animate={{
+            x: ["-100%", "100%"],
+          }}
+          transition={{
+            duration: 3,
+            repeat: Infinity,
+            repeatDelay: 2,
+            ease: "linear",
+          }}
+        />
+        
+        <motion.div
+          className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-32 h-32 border border-cyan-500/20 rounded-full pointer-events-none"
+          animate={{
+            scale: [1, 1.5, 1],
+            opacity: [0.3, 0, 0.3],
+          }}
+          transition={{
+            duration: 3,
+            repeat: Infinity,
+            ease: "easeInOut",
+          }}
+        />
+      </div>
+
+      <div className="absolute -top-4 -right-4 w-24 h-24 bg-cyan-500/20 rounded-full blur-2xl animate-pulse" />
+      <div className="absolute -bottom-4 -left-4 w-32 h-32 bg-purple-500/20 rounded-full blur-2xl animate-pulse" />
+      
+      <motion.div
+        className="absolute top-10 right-10 text-cyan-400/30"
+        animate={{ rotate: 360 }}
+        transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
+      >
+        <Code2 className="w-12 h-12" />
+      </motion.div>
+      
+      <motion.div
+        className="absolute bottom-10 left-10 text-purple-400/30"
+        animate={{ rotate: -360 }}
+        transition={{ duration: 15, repeat: Infinity, ease: "linear" }}
+      >
+        <Terminal className="w-10 h-10" />
+      </motion.div>
+    </div>
   )
 }
 
