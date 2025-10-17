@@ -1,208 +1,285 @@
 "use client"
 
-import { useEffect } from "react"
+import { useEffect, useState, useRef } from "react"
 import Image from "next/image"
-import { Button } from "@/components/ui/button"
-import { motion, useAnimation } from "framer-motion"
-import { Download, Mail, ArrowDown, Github, Linkedin, Twitter } from "lucide-react"
-import { useInView } from "react-intersection-observer"
-
-// Animation variants
-const containerVariants = {
-  hidden: { opacity: 0 },
-  visible: {
-    opacity: 1,
-    transition: {
-      staggerChildren: 0.2, // Stagger children animations
-    },
-  },
-};
-
-const itemVariants = {
-  hidden: { opacity: 0, y: 20 },
-  visible: { opacity: 1, y: 0, transition: { duration: 0.6, ease: "easeOut" } },
-};
-
-const imageVariants = {
-  hidden: { opacity: 0, scale: 0.8, rotate: -5 },
-  visible: { 
-    opacity: 1, 
-    scale: 1, 
-    rotate: 0,
-    transition: { duration: 0.8, ease: [0.6, -0.05, 0.01, 0.99] } // Custom ease for bounce effect
-  },
-};
-
-const wordVariants = {
-  hidden: { opacity: 0 },
-  visible: { opacity: 1, transition: { duration: 0.5 } },
-};
+import { motion, useMotionValue, useSpring, useTransform } from "framer-motion"
+import { Download, Mail, Github, Linkedin, Twitter, Terminal, Code2, Sparkles } from "lucide-react"
 
 export default function Hero() {
-  const controls = useAnimation();
-  const [ref, inView] = useInView({ triggerOnce: true, threshold: 0.1 });
+  const [displayedText, setDisplayedText] = useState("")
+  const [showCursor, setShowCursor] = useState(true)
+  const fullText = "Ahmed Pervez"
+  const containerRef = useRef<HTMLDivElement>(null)
+
+  const mouseX = useMotionValue(0)
+  const mouseY = useMotionValue(0)
+
+  const springX = useSpring(mouseX, { stiffness: 150, damping: 20 })
+  const springY = useSpring(mouseY, { stiffness: 150, damping: 20 })
 
   useEffect(() => {
-    if (inView) {
-      controls.start("visible");
-    }
-  }, [controls, inView]);
+    let currentIndex = 0
+    const typingInterval = setInterval(() => {
+      if (currentIndex <= fullText.length) {
+        setDisplayedText(fullText.slice(0, currentIndex))
+        currentIndex++
+      } else {
+        clearInterval(typingInterval)
+        setShowCursor(false)
+      }
+    }, 100)
 
-  const subheadingText = "Senior Software Engineer specializing in Full Stack Development with a passion for creating responsive, engaging web applications.";
-  const words = subheadingText.split(" ");
+    return () => clearInterval(typingInterval)
+  }, [])
+
+  useEffect(() => {
+    const handleMouseMove = (e: MouseEvent) => {
+      if (!containerRef.current) return
+      const rect = containerRef.current.getBoundingClientRect()
+      mouseX.set(e.clientX - rect.left - rect.width / 2)
+      mouseY.set(e.clientY - rect.top - rect.height / 2)
+    }
+
+    window.addEventListener("mousemove", handleMouseMove)
+    return () => window.removeEventListener("mousemove", handleMouseMove)
+  }, [mouseX, mouseY])
+
+  const rotateX = useTransform(springY, [-300, 300], [5, -5])
+  const rotateY = useTransform(springX, [-300, 300], [-5, 5])
+
+  const socialLinks = [
+    { icon: Github, href: "https://github.com/needahmed", label: "GitHub" },
+    { icon: Linkedin, href: "https://www.linkedin.com/in/youneedahmed/", label: "LinkedIn" },
+    { icon: Twitter, href: "https://x.com/zedgaghost", label: "Twitter" },
+  ]
 
   return (
-    <motion.section 
+    <section 
       id="home" 
-      ref={ref} 
-      className="relative min-h-screen flex items-center justify-center overflow-hidden section-padding pt-20 lg:pt-16 bg-gradient-to-b from-white to-gray-50 dark:from-gray-900 dark:to-gray-950"
-      variants={containerVariants}
-      initial="hidden"
-      animate={controls}
+      ref={containerRef}
+      className="relative min-h-screen flex items-center justify-center overflow-hidden pt-20 scanlines"
     >
-      {/* Optional: Add subtle background animation */}
-      <motion.div 
-        className="absolute inset-0 z-0 opacity-10 dark:opacity-20"
-        style={{ 
-          backgroundImage: 'radial-gradient(circle, rgba(166,130,176,0.2) 0%, rgba(255,255,255,0) 70%)',
-        }}
-        animate={{ scale: [1, 1.2, 1], opacity: [0.05, 0.15, 0.05] }}
-        transition={{ duration: 15, repeat: Infinity, ease: "linear" }}
-      />
+      <div className="absolute inset-0 bg-gradient-to-b from-cyan-500/5 via-transparent to-purple-500/5" />
+      
+      <FloatingParticles />
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center z-10 max-w-6xl mx-auto">
-        <motion.div variants={itemVariants} className="order-2 lg:order-1">
-          <motion.h1 
-            variants={itemVariants}
-            className="text-4xl md:text-5xl lg:text-6xl font-extrabold mb-6 leading-tight text-gray-900 dark:text-white"
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 relative z-10">
+        <div className="grid lg:grid-cols-2 gap-16 items-center">
+          <motion.div
+            initial={{ opacity: 0, x: -50 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.8 }}
+            className="space-y-8"
           >
-            Hello, I'm{" "}
-            <motion.span 
-              className="inline-block animated-gradient-text"
-              style={{
-                  background: 'linear-gradient(90deg, #c66461, #a682b0, #eca17a, #a682b0, #c66461)',
-                  backgroundSize: '200% 100%',
-                  WebkitBackgroundClip: 'text',
-                  WebkitTextFillColor: 'transparent',
-              }}
-              animate={{ backgroundPosition: ['0% 50%', '200% 50%'] }}
-              transition={{ 
-                  duration: 4, 
-                  repeat: Infinity, 
-                  repeatType: "reverse",
-                  ease: "linear" 
-              }}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.2 }}
+              className="flex items-center gap-2 text-cyan-400 font-mono text-sm"
             >
-              Ahmed Pervez
-            </motion.span>
-          </motion.h1>
-          <motion.h2 
-            variants={containerVariants} // Use container here for word stagger
-            initial="hidden"
-            animate="visible"
-            className="text-xl md:text-2xl text-gray-600 dark:text-gray-300 mb-8 font-light leading-relaxed"
-          >
-            {words.map((word, index) => (
-              <motion.span key={index} variants={wordVariants} className="inline-block mr-1.5">
-                {word}
-                {/* Add non-breaking space if it's not the last word */}
-                {index < words.length - 1 ? '\u00A0' : ''}
-              </motion.span>
-            ))}
-          </motion.h2>
-          <motion.div variants={itemVariants} className="flex flex-col sm:flex-row gap-4">
-            <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-              <Button className="btn-primary w-full sm:w-auto flex items-center justify-center gap-2 group transition-all duration-300 hover:shadow-lg hover:bg-gradient-to-r hover:from-[#c66461] hover:to-[#a682b0]" asChild>
-                <a href="#contact">
-                  Contact Me <Mail className="ml-1 group-hover:rotate-[360deg] transition-transform duration-500" size={18} />
-                </a>
-              </Button>
+              <Terminal className="w-4 h-4 animate-pulse" />
+              <span className="text-gray-400">~/portfolio</span>
+              <span className="text-purple-400">$</span>
+              <span className="text-cyan-400">whoami</span>
             </motion.div>
-            <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-              <Button className="btn-primary w-full sm:w-auto flex items-center justify-center gap-2 group transition-all duration-300 hover:shadow-lg hover:bg-gradient-to-r hover:from-[#c66461] hover:to-[#a682b0]" asChild>
-                <a href="/CV.pdf" download>
-                  Download CV <Download className="ml-1 group-hover:translate-y-[3px] group-hover:-translate-x-[2px] transition-transform duration-300" size={18} />
-                </a>
-              </Button>
+
+            <div>
+              <motion.h1 
+                className="text-5xl md:text-7xl font-bold mb-4 font-mono"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ delay: 0.3 }}
+              >
+                <span className="text-gray-400">&gt; </span>
+                <span className="gradient-text cyber-glow">
+                  {displayedText}
+                </span>
+                {showCursor && <span className="terminal-cursor" />}
+              </motion.h1>
+              
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ delay: 1.5 }}
+                className="space-y-2"
+              >
+                <div className="flex items-center gap-2 text-purple-400 font-mono text-sm">
+                  <Code2 className="w-4 h-4" />
+                  <span className="text-gray-400">role:</span>
+                  <span className="text-green-400">Senior Software Engineer</span>
+                </div>
+                <div className="flex items-center gap-2 text-purple-400 font-mono text-sm">
+                  <Sparkles className="w-4 h-4" />
+                  <span className="text-gray-400">expertise:</span>
+                  <span className="text-green-400">Full Stack Development</span>
+                </div>
+              </motion.div>
+            </div>
+
+            <motion.p
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 1.8 }}
+              className="text-lg text-gray-300 leading-relaxed max-w-xl"
+            >
+              Crafting responsive, engaging web applications with a passion for clean code
+              and cutting-edge technologies. Specialized in React, Next.js, and Node.js ecosystems.
+            </motion.p>
+
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 2.1 }}
+              className="flex flex-wrap gap-4"
+            >
+              <motion.a
+                href="#contact"
+                whileHover={{ scale: 1.05, boxShadow: "0 0 30px rgba(0, 240, 255, 0.4)" }}
+                whileTap={{ scale: 0.95 }}
+                className="btn-cyber group flex items-center gap-2"
+              >
+                <Mail className="w-4 h-4 group-hover:rotate-12 transition-transform" />
+                Contact Me
+              </motion.a>
+
+              <motion.a
+                href="/CV.pdf"
+                download
+                whileHover={{ scale: 1.05, boxShadow: "0 0 30px rgba(176, 38, 255, 0.4)" }}
+                whileTap={{ scale: 0.95 }}
+                className="btn-cyber group flex items-center gap-2"
+              >
+                <Download className="w-4 h-4 group-hover:translate-y-1 transition-transform" />
+                Download CV
+              </motion.a>
+            </motion.div>
+
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 2.4 }}
+              className="flex gap-4"
+            >
+              {socialLinks.map((social, index) => (
+                <motion.a
+                  key={social.label}
+                  href={social.href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  whileHover={{ y: -5, scale: 1.1 }}
+                  whileTap={{ scale: 0.9 }}
+                  className="p-3 rounded-lg glass-card hover:bg-cyan-500/10 transition-colors group"
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 2.4 + index * 0.1 }}
+                >
+                  <social.icon className="w-5 h-5 text-cyan-400 group-hover:text-cyan-300" />
+                </motion.a>
+              ))}
             </motion.div>
           </motion.div>
 
-          {/* Social Media Icons */}
-          <motion.div 
-            variants={itemVariants} 
-            className="flex justify-center sm:justify-start gap-4 mt-8"
+          <motion.div
+            initial={{ opacity: 0, scale: 0.8 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 1, delay: 0.5 }}
+            className="relative flex justify-center items-center"
+            style={{ perspective: 1000 }}
           >
-            <motion.a
-              href="https://github.com/needahmed"
-              target="_blank"
-              rel="noopener noreferrer"
-              whileHover={{ scale: 1.1, y: -3 }}
-              whileTap={{ scale: 0.9 }}
-              className="p-2 rounded-full bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors"
+            <motion.div
+              style={{ rotateX, rotateY }}
+              className="relative"
             >
-              <Github size={20} />
-            </motion.a>
-            <motion.a
-              href="https://www.linkedin.com/in/youneedahmed/"
-              target="_blank"
-              rel="noopener noreferrer"
-              whileHover={{ scale: 1.1, y: -3 }}
-              whileTap={{ scale: 0.9 }}
-              className="p-2 rounded-full bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors"
-            >
-              <Linkedin size={20} />
-            </motion.a>
-            <motion.a
-              href="https://x.com/zedgaghost"
-              target="_blank"
-              rel="noopener noreferrer"
-              whileHover={{ scale: 1.1, y: -3 }}
-              whileTap={{ scale: 0.9 }}
-              className="p-2 rounded-full bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors"
-            >
-              <Twitter size={20} />
-            </motion.a>
-          </motion.div>
+              <div className="relative w-[300px] h-[300px] md:w-[400px] md:h-[400px] lg:w-[500px] lg:h-[500px]">
+                <div className="absolute inset-0 holographic-border rounded-3xl animate-pulse-glow" />
+                
+                <div className="absolute inset-4 rounded-2xl overflow-hidden neon-box">
+                  <Image
+                    src="/ProfilePicture.png"
+                    alt="Ahmed Pervez"
+                    fill
+                    className="object-cover"
+                    priority
+                    sizes="(max-width: 768px) 300px, (max-width: 1024px) 400px, 500px"
+                  />
+                  
+                  <div className="absolute inset-0 bg-gradient-to-tr from-cyan-500/20 via-transparent to-purple-500/20 mix-blend-overlay" />
+                  
+                  <motion.div
+                    className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent"
+                    animate={{
+                      x: ["-100%", "100%"],
+                    }}
+                    transition={{
+                      duration: 3,
+                      repeat: Infinity,
+                      repeatDelay: 2,
+                      ease: "linear",
+                    }}
+                  />
+                </div>
 
-          <motion.div 
-            variants={itemVariants} 
-            className="mt-16 flex items-center gap-3 justify-center opacity-70"
-            animate={{ y: [0, -5, 0] }}
-            transition={{ duration: 1.5, repeat: Infinity, ease: "easeInOut" }}
-          >
-            <ArrowDown size={16} className="text-gray-500 dark:text-gray-400" />
-            <p className="text-sm text-gray-500 dark:text-gray-400">Scroll down</p>
+                <div className="absolute -top-4 -right-4 w-24 h-24 bg-cyan-500/20 rounded-full blur-2xl animate-pulse" />
+                <div className="absolute -bottom-4 -left-4 w-32 h-32 bg-purple-500/20 rounded-full blur-2xl animate-pulse" />
+              </div>
+            </motion.div>
           </motion.div>
-        </motion.div>
-
-        <motion.div
-          variants={imageVariants}
-          whileHover={{ scale: 1.03, rotate: 1 }}
-          transition={{ type: "spring", stiffness: 300, damping: 15 }}
-          className="order-1 lg:order-2 flex justify-center lg:justify-end"
-        >
-          <div className="relative w-[280px] h-[280px] md:w-[350px] md:h-[350px] lg:w-[400px] lg:h-[400px] rounded-full overflow-hidden border-8 md:border-[10px] border-white dark:border-gray-800 shadow-2xl dark:shadow-gray-900/50 aspect-square">
-            <Image
-              src="/ProfilePicture.png?height=400&width=400"
-              alt="Ahmed Pervez"
-              fill
-              className="object-cover"
-              priority
-              sizes="(max-width: 768px) 280px, (max-width: 1024px) 350px, 400px"
-            />
-            {/* Optional: Add a subtle overlay/shine effect */}
-            <motion.div 
-              className="absolute inset-0 rounded-full"
-              style={{ 
-                background: 'linear-gradient(135deg, rgba(255,255,255,0.2) 0%, rgba(255,255,255,0) 50%)'
-              }}
-              initial={{ x: '-100%' }}
-              animate={{ x: '100%' }}
-              transition={{ duration: 2, repeat: Infinity, repeatDelay: 5, ease: "linear" }}
-            />
-          </div>
-        </motion.div>
+        </div>
       </div>
-    </motion.section>
+
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ delay: 2.5 }}
+        className="absolute bottom-10 left-1/2 -translate-x-1/2"
+      >
+        <motion.div
+          animate={{ y: [0, 10, 0] }}
+          transition={{ duration: 2, repeat: Infinity }}
+          className="flex flex-col items-center gap-2 text-cyan-400/50 font-mono text-xs"
+        >
+          <span>scroll_down</span>
+          <div className="w-[1px] h-12 bg-gradient-to-b from-cyan-400/50 to-transparent" />
+        </motion.div>
+      </motion.div>
+    </section>
+  )
+}
+
+function FloatingParticles() {
+  const particles = Array.from({ length: 30 }, (_, i) => ({
+    id: i,
+    x: Math.random() * 100,
+    y: Math.random() * 100,
+    duration: 3 + Math.random() * 4,
+    delay: Math.random() * 2,
+    size: 2 + Math.random() * 3,
+  }))
+
+  return (
+    <div className="absolute inset-0 overflow-hidden pointer-events-none">
+      {particles.map((particle) => (
+        <motion.div
+          key={particle.id}
+          className="absolute rounded-full bg-cyan-400/30"
+          style={{
+            left: `${particle.x}%`,
+            top: `${particle.y}%`,
+            width: particle.size,
+            height: particle.size,
+          }}
+          animate={{
+            y: [0, -30, 0],
+            opacity: [0, 1, 0],
+          }}
+          transition={{
+            duration: particle.duration,
+            delay: particle.delay,
+            repeat: Infinity,
+            ease: "easeInOut",
+          }}
+        />
+      ))}
+    </div>
   )
 }

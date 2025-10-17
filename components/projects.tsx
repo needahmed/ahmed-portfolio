@@ -3,42 +3,9 @@
 import { useRef } from "react"
 import Image from "next/image"
 import { motion, useInView } from "framer-motion"
-import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
+import Tilt from "react-parallax-tilt"
 import { Badge } from "@/components/ui/badge"
-import { ExternalLink, Github } from "lucide-react"
-
-// Reusable animation variants
-const containerStaggerVariants = {
-  hidden: { opacity: 0 },
-  visible: {
-    opacity: 1,
-    transition: {
-      staggerChildren: 0.15, // Faster stagger for cards/badges
-      delayChildren: 0.1,
-    },
-  },
-};
-
-const itemSlideUpVariants = {
-  hidden: { opacity: 0, y: 30 },
-  visible: { opacity: 1, y: 0, transition: { duration: 0.5, ease: "easeOut" } },
-};
-
-const itemScaleInVariants = {
-  hidden: { opacity: 0, scale: 0.85, y: 20 },
-  visible: { 
-    opacity: 1, 
-    scale: 1, 
-    y: 0,
-    transition: { duration: 0.5, ease: [0.6, -0.05, 0.01, 0.99] } 
-  },
-};
-
-const badgeVariant = {
-  hidden: { opacity: 0, scale: 0.5 },
-  visible: { opacity: 1, scale: 1, transition: { duration: 0.4, ease: "easeOut" } }
-}
+import { ExternalLink, Github, Zap } from "lucide-react"
 
 const projects = [
   {
@@ -117,105 +84,135 @@ const projects = [
 
 export default function Projects() {
   const sectionRef = useRef(null)
-  const sectionInView = useInView(sectionRef, { once: true, amount: 0.1 })
-
-  const titleRef = useRef(null)
-  const titleInView = useInView(titleRef, { once: true, amount: 0.5 })
+  const isInView = useInView(sectionRef, { once: true, amount: 0.1 })
 
   return (
-    <section id="projects" className="section-padding bg-gray-50 dark:bg-gray-950 overflow-hidden">
-      <div ref={sectionRef} className="max-w-6xl mx-auto">
+    <section id="projects" className="section-padding relative overflow-hidden">
+      <div className="absolute inset-0 bg-gradient-to-b from-transparent via-purple-500/5 to-transparent" />
+      
+      <motion.div
+        ref={sectionRef}
+        initial={{ opacity: 0 }}
+        animate={isInView ? { opacity: 1 } : { opacity: 0 }}
+        className="max-w-7xl mx-auto relative z-10"
+      >
         <motion.div
-          ref={titleRef}
-          initial="hidden"
-          animate={titleInView ? "visible" : "hidden"}
-          variants={containerStaggerVariants} // Stagger title elements
+          initial={{ opacity: 0, y: 30 }}
+          animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 30 }}
+          transition={{ duration: 0.6 }}
           className="text-center mb-16"
         >
-          <motion.h2 variants={itemSlideUpVariants} className="text-3xl md:text-4xl font-bold mb-4 text-gray-800 dark:text-white">My Projects</motion.h2>
-          <motion.div 
-            className="w-20 h-1 bg-gradient-to-r from-[#c66461] to-[#a682b0] mx-auto mb-6 origin-center"
-            initial={{ scaleX: 0 }}
-            animate={{ scaleX: titleInView ? 1 : 0 }}
-            transition={{ duration: 0.7, delay: 0.2, ease: "easeOut" }}
-          />
-          <motion.p variants={itemSlideUpVariants} className="text-gray-600 dark:text-gray-300 max-w-2xl mx-auto leading-relaxed">
-            Here are some of the projects I've worked on. Each project represents different skills and technologies I've
-            mastered throughout my journey.
-          </motion.p>
+          <div className="flex items-center justify-center gap-2 mb-4">
+            <motion.div
+              animate={{ rotate: 360 }}
+              transition={{ duration: 2, repeat: Infinity, ease: "linear" }}
+            >
+              <Zap className="w-6 h-6 text-cyan-400" />
+            </motion.div>
+            <span className="font-mono text-cyan-400 text-sm">Featured Work</span>
+          </div>
+          
+          <h2 className="text-4xl md:text-5xl font-bold mb-4 font-mono">
+            <span className="gradient-text">Projects</span>
+          </h2>
+          
+          <div className="flex justify-center mb-6">
+            <motion.div
+              initial={{ width: 0 }}
+              animate={isInView ? { width: 100 } : { width: 0 }}
+              transition={{ duration: 0.8, delay: 0.3 }}
+              className="h-1 bg-gradient-to-r from-cyan-400 via-purple-500 to-green-400"
+            />
+          </div>
+          
+          <p className="text-gray-400 max-w-2xl mx-auto">
+            A collection of projects showcasing my expertise in full-stack development,
+            cloud architecture, and modern web technologies.
+          </p>
         </motion.div>
 
-        <motion.div 
-          variants={containerStaggerVariants} // Stagger the grid items (cards)
-          initial="hidden"
-          animate={sectionInView ? "visible" : "hidden"}
-          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"
-        >
-          {projects.map((project) => (
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          {projects.map((project, index) => (
             <motion.div
               key={project.id}
-              variants={itemScaleInVariants} // Use scale-in variant for each card
-              // Staggering is handled by the parent grid
-              className="h-full"
+              initial={{ opacity: 0, y: 50 }}
+              animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 50 }}
+              transition={{ duration: 0.5, delay: index * 0.1 }}
             >
-              <motion.div
-                whileHover={{ y: -8, boxShadow: "0px 15px 25px -5px rgba(0, 0, 0, 0.1), 0px 10px 10px -5px rgba(0, 0, 0, 0.04)" }}
-                transition={{ type: "spring", stiffness: 300, damping: 15 }}
-                className="h-full flex flex-col overflow-hidden rounded-lg bg-white dark:bg-gray-800 shadow-lg border border-gray-200/50 dark:border-gray-700/50"
+              <Tilt
+                tiltMaxAngleX={5}
+                tiltMaxAngleY={5}
+                glareEnable={true}
+                glareMaxOpacity={0.2}
+                glareColor="#00F0FF"
+                glarePosition="all"
+                glareBorderRadius="16px"
+                className="h-full"
               >
-                <div className="relative h-48 w-full overflow-hidden">
-                  <Image
-                    src={project.image || "/placeholder.svg"}
-                    alt={project.title}
-                    fill
-                    className="object-cover transition-transform duration-500 group-hover:scale-105" // Apply group-hover if needed or just hover on Image
-                    sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-                  />
-                  <div className="absolute inset-0 bg-black/10 group-hover:bg-black/20 transition-colors duration-300" /> {/* Subtle overlay */} 
-                </div>
-                <CardHeader className="pb-2">
-                  <CardTitle className="text-xl font-semibold text-gray-800 dark:text-gray-100">{project.title}</CardTitle>
-                </CardHeader>
-                <CardContent className="pt-0 flex-grow flex flex-col">
-                  <CardDescription className="text-gray-600 dark:text-gray-300 line-clamp-3 mb-4 text-sm">
+                <div className="glass-card p-6 h-full flex flex-col group hover:shadow-[0_0_30px_rgba(0,240,255,0.3)] transition-all duration-300">
+                  <div className="relative h-48 mb-4 rounded-lg overflow-hidden">
+                    <div className="absolute inset-0 holographic-border rounded-lg z-10" />
+                    <Image
+                      src={project.image || "/placeholder.svg"}
+                      alt={project.title}
+                      fill
+                      className="object-cover group-hover:scale-110 transition-transform duration-500"
+                      sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
+                  </div>
+
+                  <h3 className="text-xl font-bold mb-3 font-mono text-cyan-400 group-hover:text-cyan-300 transition-colors">
+                    {project.title}
+                  </h3>
+
+                  <p className="text-gray-400 text-sm mb-4 flex-grow leading-relaxed">
                     {project.description}
-                  </CardDescription>
-                  <motion.div 
-                    variants={containerStaggerVariants} // Stagger badges
-                    initial="hidden"
-                    animate="visible" // Animate badges when card is visible (inherited from parent)
-                    className="flex flex-wrap gap-2 mt-auto pt-2"
-                  >
+                  </p>
+
+                  <div className="flex flex-wrap gap-2 mb-4">
                     {project.tags.map((tag) => (
-                      <motion.div key={tag} variants={badgeVariant}>
-                        <Badge variant="secondary" className="font-normal text-xs dark:bg-gray-700 dark:text-gray-300">
-                          {tag}
-                        </Badge>
-                      </motion.div>
+                      <Badge
+                        key={tag}
+                        variant="outline"
+                        className="border-cyan-500/30 text-cyan-400 bg-cyan-500/5 hover:bg-cyan-500/10 transition-colors text-xs"
+                      >
+                        {tag}
+                      </Badge>
                     ))}
-                  </motion.div>
-                </CardContent>
-                <CardFooter className="flex justify-end gap-3 pt-4 border-t border-gray-100 dark:border-gray-700 mt-4">
-                  <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-                    <Button variant="ghost" size="sm" className="flex items-center gap-1.5 text-gray-600 dark:text-gray-300 hover:text-primary dark:hover:text-primary" asChild>
-                      <a href={project.links.github} target="_blank" rel="noopener noreferrer">
-                        <Github size={16} /> Code
-                      </a>
-                    </Button>
-                  </motion.div>
-                  <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-                    <Button className="bg-gradient-to-r from-[#c66461]/90 to-[#a682b0]/90 hover:opacity-90 flex items-center gap-1.5 rounded-full px-3 py-1 shadow-sm text-white" size="sm" asChild>
-                      <a href={project.links.demo} target="_blank" rel="noopener noreferrer">
-                        <ExternalLink size={16} /> Demo
-                      </a>
-                    </Button>
-                  </motion.div>
-                </CardFooter>
-              </motion.div>
+                  </div>
+
+                  <div className="flex gap-3 pt-4 border-t border-white/10">
+                    <motion.a
+                      href={project.links.github}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      whileHover={{ scale: 1.1, y: -2 }}
+                      whileTap={{ scale: 0.95 }}
+                      className="flex-1 flex items-center justify-center gap-2 px-4 py-2 bg-white/5 hover:bg-white/10 border border-white/10 rounded-lg transition-colors font-mono text-sm text-gray-300 hover:text-cyan-400"
+                    >
+                      <Github className="w-4 h-4" />
+                      Code
+                    </motion.a>
+                    
+                    <motion.a
+                      href={project.links.demo}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      whileHover={{ scale: 1.1, y: -2 }}
+                      whileTap={{ scale: 0.95 }}
+                      className="flex-1 flex items-center justify-center gap-2 px-4 py-2 bg-gradient-to-r from-cyan-500/20 to-purple-500/20 hover:from-cyan-500/30 hover:to-purple-500/30 border border-cyan-500/50 rounded-lg transition-colors font-mono text-sm text-cyan-400"
+                    >
+                      <ExternalLink className="w-4 h-4" />
+                      Demo
+                    </motion.a>
+                  </div>
+                </div>
+              </Tilt>
             </motion.div>
           ))}
-        </motion.div>
-      </div>
+        </div>
+      </motion.div>
     </section>
   )
 }
