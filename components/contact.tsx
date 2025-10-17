@@ -1,53 +1,13 @@
 "use client"
 
-import type React from "react"
-
 import { useState, useRef } from "react"
 import { motion, useInView } from "framer-motion"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
 import { useToast } from "@/components/ui/use-toast"
-import { Mail, Phone, MapPin, Send, Linkedin, Github, Twitter } from "lucide-react"
+import { Mail, Phone, MapPin, Send, Linkedin, Github, Twitter, MessageSquare } from "lucide-react"
 
-// --- Reusable Animation Variants ---
-const containerStaggerVariants = {
-  hidden: { opacity: 0 },
-  visible: (delayChildren = 0) => ({
-    opacity: 1,
-    transition: {
-      staggerChildren: 0.15,
-      delayChildren: delayChildren,
-    },
-  }),
-};
-
-const itemSlideUpVariants = {
-  hidden: { opacity: 0, y: 30 },
-  visible: { opacity: 1, y: 0, transition: { duration: 0.5, ease: "easeOut" } },
-};
-
-const itemSlideInLeftVariants = {
-  hidden: { opacity: 0, x: -30 },
-  visible: { opacity: 1, x: 0, transition: { duration: 0.6, ease: "easeOut", staggerChildren: 0.1 } }, // Add stagger for children
-};
-
-const itemSlideInRightVariants = {
-  hidden: { opacity: 0, x: 30 },
-  visible: { opacity: 1, x: 0, transition: { duration: 0.6, ease: "easeOut", staggerChildren: 0.1 } }, // Add stagger for children
-};
-
-const iconScaleInVariant = {
-  hidden: { scale: 0 },
-  visible: { scale: 1, transition: { type: "spring", stiffness: 200, damping: 10, delay: 0.1 } }
-}
-
-const socialIconVariant = {
-  hidden: { opacity: 0, scale: 0.5 },
-  visible: { opacity: 1, scale: 1, transition: { type: "spring", stiffness: 200, damping: 12 } }
-}
-
-// --- Contact Component ---
 export default function Contact() {
   const [formData, setFormData] = useState({
     name: "",
@@ -57,12 +17,9 @@ export default function Contact() {
   })
   const [isSubmitting, setIsSubmitting] = useState(false)
   const { toast } = useToast()
-  
-  const sectionRef = useRef(null)
-  const sectionInView = useInView(sectionRef, { once: true, amount: 0.1 })
 
-  const titleRef = useRef(null)
-  const titleInView = useInView(titleRef, { once: true, amount: 0.5 })
+  const sectionRef = useRef(null)
+  const isInView = useInView(sectionRef, { once: true, amount: 0.1 })
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target
@@ -74,229 +31,257 @@ export default function Contact() {
     setIsSubmitting(true)
 
     try {
-      const response = await fetch('/api/contact', {
-        method: 'POST',
+      const response = await fetch("/api/contact", {
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
         body: JSON.stringify(formData),
-      });
+      })
 
-      const data = await response.json();
-      
+      const data = await response.json()
+
       if (response.ok) {
         toast({
           title: "Message sent!",
           description: "Thank you for your message. I'll get back to you soon.",
-          variant: "default",
-        });
-        setFormData({ name: "", email: "", subject: "", message: "" });
+        })
+        setFormData({ name: "", email: "", subject: "", message: "" })
       } else {
-        throw new Error(data.error || 'Failed to send message');
+        throw new Error(data.error || "Failed to send message")
       }
     } catch (error) {
       toast({
         title: "Error",
-        description: error instanceof Error ? error.message : "Something went wrong. Please try again later.",
+        description:
+          error instanceof Error
+            ? error.message
+            : "Something went wrong. Please try again later.",
         variant: "destructive",
-      });
+      })
     } finally {
-      setIsSubmitting(false);
+      setIsSubmitting(false)
     }
   }
 
+  const contactInfo = [
+    {
+      icon: Mail,
+      label: "Email",
+      value: "ahmed@example.com",
+      href: "mailto:ahmed@example.com",
+    },
+    {
+      icon: Phone,
+      label: "Phone",
+      value: "+92 XXX XXXXXXX",
+      href: "tel:+92XXXXXXXXX",
+    },
+    {
+      icon: MapPin,
+      label: "Location",
+      value: "Islamabad, Pakistan",
+      href: null,
+    },
+  ]
+
+  const socialLinks = [
+    { icon: Github, href: "https://github.com/needahmed", label: "GitHub" },
+    { icon: Linkedin, href: "https://www.linkedin.com/in/youneedahmed/", label: "LinkedIn" },
+    { icon: Twitter, href: "https://x.com/zedgaghost", label: "Twitter" },
+  ]
+
   return (
-    <section id="contact" className="section-padding bg-gradient-to-b from-white to-gray-100 dark:from-gray-900 dark:to-gray-950 overflow-hidden">
-      <div ref={sectionRef} className="max-w-6xl mx-auto">
+    <section id="contact" className="section-padding relative overflow-hidden">
+      <div className="absolute inset-0 bg-gradient-to-b from-transparent via-cyan-500/5 to-transparent" />
+
+      <motion.div
+        ref={sectionRef}
+        initial={{ opacity: 0 }}
+        animate={isInView ? { opacity: 1 } : { opacity: 0 }}
+        className="max-w-7xl mx-auto relative z-10"
+      >
         <motion.div
-          ref={titleRef}
-          initial="hidden"
-          animate={titleInView ? "visible" : "hidden"}
-          variants={containerStaggerVariants}
+          initial={{ opacity: 0, y: 30 }}
+          animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 30 }}
+          transition={{ duration: 0.6 }}
           className="text-center mb-16"
         >
-          <motion.h2 variants={itemSlideUpVariants} className="text-3xl md:text-4xl font-bold mb-4 text-gray-800 dark:text-white">Contact Me</motion.h2>
-          <motion.div 
-            className="w-20 h-1 bg-gradient-to-r from-[#c66461] to-[#a682b0] mx-auto mb-6 origin-center"
-            initial={{ scaleX: 0 }}
-            animate={{ scaleX: titleInView ? 1 : 0 }}
-            transition={{ duration: 0.7, delay: 0.1, ease: "easeOut" }}
-          />
-          <motion.p variants={itemSlideUpVariants} className="text-gray-600 dark:text-gray-300 max-w-2xl mx-auto leading-relaxed">
-            Feel free to reach out to me for any inquiries, collaboration opportunities, or just to say hello!
-          </motion.p>
+          <div className="flex items-center justify-center gap-2 mb-4">
+            <MessageSquare className="w-6 h-6 text-cyan-400" />
+            <span className="font-mono text-cyan-400 text-sm">Get In Touch</span>
+          </div>
+
+          <h2 className="text-4xl md:text-5xl font-bold mb-4 font-mono">
+            <span className="gradient-text">Contact Me</span>
+          </h2>
+
+          <div className="flex justify-center mb-6">
+            <motion.div
+              initial={{ width: 0 }}
+              animate={isInView ? { width: 100 } : { width: 0 }}
+              transition={{ duration: 0.8, delay: 0.3 }}
+              className="h-1 bg-gradient-to-r from-cyan-400 via-purple-500 to-green-400"
+            />
+          </div>
+
+          <p className="text-gray-400 max-w-2xl mx-auto">
+            Have a project in mind or want to collaborate? Feel free to reach out. I'm always open
+            to discussing new opportunities.
+          </p>
         </motion.div>
 
-        <motion.div 
-          variants={containerStaggerVariants} // Stagger left and right columns
-          initial="hidden"
-          animate={sectionInView ? "visible" : "hidden"}
-          custom={0.2} // Add slight delay before columns start
-          className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16"
-        >
-          {/* Contact Info Column */}
-          <motion.div variants={itemSlideInLeftVariants} >
-            <motion.h3 
-              variants={itemSlideUpVariants}
-              className="text-2xl lg:text-3xl font-semibold mb-6 inline-block"
-            >
-               <span className="bg-gradient-to-r from-[#c66461] via-[#a682b0] to-[#eca17a] bg-clip-text text-transparent">
-                 Get In Touch
-               </span>
-            </motion.h3>
+        <div className="grid lg:grid-cols-2 gap-12">
+          <motion.div
+            initial={{ opacity: 0, x: -50 }}
+            animate={isInView ? { opacity: 1, x: 0 } : { opacity: 0, x: -50 }}
+            transition={{ duration: 0.6, delay: 0.2 }}
+            className="space-y-8"
+          >
+            <div className="glass-card p-8">
+              <h3 className="text-2xl font-bold font-mono gradient-text mb-6">
+                Let's Connect
+              </h3>
 
-            <motion.div variants={containerStaggerVariants} className="space-y-6">
-              {[ // Array for easier mapping and staggering
-                { icon: Mail, text: "needahmedwork@gmail.com", label: "Email", color: "primary", iconBg: "bg-blue-100", iconColor: "text-blue-500" },
-                { icon: Phone, text: "+92 333 5394643", label: "Phone", color: "accent", iconBg: "bg-purple-100", iconColor: "text-purple-500" },
-                { icon: MapPin, text: "Islamabad, Pakistan", label: "Location", color: "secondary", iconBg: "bg-green-100", iconColor: "text-green-500" },
-              ].map((item, index) => (
-                <motion.div key={index} variants={itemSlideUpVariants} className="flex items-center space-x-4">
-                  <motion.div variants={iconScaleInVariant} className={`p-3 rounded-full ${item.iconBg}`}>
-                    <item.icon className={item.iconColor} size={20} />
-                  </motion.div>
-                  <div>
-                    <h4 className="font-medium text-gray-800 dark:text-gray-100 text-sm">{item.label}</h4>
-                    <p className="text-gray-600 dark:text-gray-300 text-sm">{item.text}</p>
-                  </div>
-                </motion.div>
-              ))}
-            </motion.div>
-
-            <motion.div variants={itemSlideUpVariants} className="mt-10">
-              <h4 className="font-medium mb-4 text-gray-800 dark:text-gray-100">Connect with me</h4>
-              <motion.div variants={containerStaggerVariants} className="flex space-x-3">
-                {[ // Array for easier mapping and staggering
-                  { icon: Linkedin, href: "https://www.linkedin.com/in/youneedahmed/", label: "LinkedIn", color: "blue" },
-                  { icon: Github, href: "https://github.com/needahmed", label: "GitHub", color: "gray" },
-                  { icon: Twitter, href: "https://x.com/zedgaghost", label: "Twitter", color: "sky" },
-                ].map((social) => (
-                  <motion.a
-                    key={social.label}
-                    href={social.href}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    variants={socialIconVariant}
-                    whileHover={{ scale: 1.15, y: -3 }}
-                    whileTap={{ scale: 0.9 }}
-                    className={`bg-${social.color}-100 p-3 rounded-full text-${social.color}-600 hover:bg-${social.color}-200 hover:text-${social.color}-700 transition-colors duration-200 shadow-sm dark:bg-${social.color}-900/30 dark:text-${social.color}-400 dark:hover:bg-${social.color}-900/50`}
-                    aria-label={social.label}
+              <div className="space-y-6">
+                {contactInfo.map((info, index) => (
+                  <motion.div
+                    key={info.label}
+                    initial={{ opacity: 0, x: -20 }}
+                    animate={isInView ? { opacity: 1, x: 0 } : { opacity: 0, x: -20 }}
+                    transition={{ duration: 0.5, delay: 0.3 + index * 0.1 }}
+                    className="flex items-center gap-4 group"
                   >
-                    <social.icon size={20} />
-                  </motion.a>
+                    <div className="p-3 rounded-lg bg-cyan-500/10 group-hover:bg-cyan-500/20 transition-colors">
+                      <info.icon className="w-5 h-5 text-cyan-400" />
+                    </div>
+                    <div>
+                      <p className="text-xs text-gray-500 font-mono mb-1">{info.label}</p>
+                      {info.href ? (
+                        <a
+                          href={info.href}
+                          className="text-gray-300 hover:text-cyan-400 transition-colors font-mono"
+                        >
+                          {info.value}
+                        </a>
+                      ) : (
+                        <p className="text-gray-300 font-mono">{info.value}</p>
+                      )}
+                    </div>
+                  </motion.div>
                 ))}
-              </motion.div>
-            </motion.div>
+              </div>
+
+              <div className="mt-8 pt-8 border-t border-white/10">
+                <p className="text-sm text-gray-400 mb-4 font-mono">Follow me on:</p>
+                <div className="flex gap-4">
+                  {socialLinks.map((social, index) => (
+                    <motion.a
+                      key={social.label}
+                      href={social.href}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      initial={{ opacity: 0, scale: 0 }}
+                      animate={isInView ? { opacity: 1, scale: 1 } : { opacity: 0, scale: 0 }}
+                      transition={{ duration: 0.3, delay: 0.5 + index * 0.1 }}
+                      whileHover={{ scale: 1.2, y: -5 }}
+                      whileTap={{ scale: 0.9 }}
+                      className="p-3 rounded-lg glass-card hover:bg-cyan-500/10 transition-colors"
+                    >
+                      <social.icon className="w-5 h-5 text-cyan-400" />
+                    </motion.a>
+                  ))}
+                </div>
+              </div>
+            </div>
           </motion.div>
 
-          {/* Form Column */}
-          <motion.div 
-            variants={itemSlideInRightVariants}
-            className="bg-white dark:bg-gray-800 p-6 md:p-8 rounded-xl shadow-xl border border-gray-100 dark:border-gray-700"
+          <motion.div
+            initial={{ opacity: 0, x: 50 }}
+            animate={isInView ? { opacity: 1, x: 0 } : { opacity: 0, x: 50 }}
+            transition={{ duration: 0.6, delay: 0.3 }}
           >
-            <form onSubmit={handleSubmit}>
-              <motion.div variants={containerStaggerVariants} className="space-y-5">
-                <motion.div variants={itemSlideUpVariants}>
-                  <label htmlFor="name" className="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-1">
-                    Your Name
-                  </label>
-                  <Input
-                    id="name"
-                    name="name"
-                    value={formData.name}
-                    onChange={handleChange}
-                    placeholder="John Doe"
-                    required
-                    className="w-full bg-gray-50 dark:bg-gray-700 focus:bg-white dark:focus:bg-gray-600 border-gray-200 dark:border-gray-600 focus:border-primary focus:ring-primary/50"
-                    aria-label="Your Name"
-                  />
-                </motion.div>
+            <form onSubmit={handleSubmit} className="glass-card p-8 space-y-6">
+              <div className="space-y-2">
+                <label className="text-sm font-mono text-cyan-400">Name</label>
+                <Input
+                  name="name"
+                  value={formData.name}
+                  onChange={handleChange}
+                  required
+                  placeholder="John Doe"
+                  className="bg-white/5 border-white/10 text-gray-100 placeholder:text-gray-500 focus:border-cyan-500 focus:ring-cyan-500/20 font-mono"
+                />
+              </div>
 
-                <motion.div variants={itemSlideUpVariants}>
-                  <label htmlFor="email" className="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-1">
-                    Your Email
-                  </label>
-                  <Input
-                    id="email"
-                    name="email"
-                    type="email"
-                    value={formData.email}
-                    onChange={handleChange}
-                    placeholder="john@example.com"
-                    required
-                    className="w-full bg-gray-50 dark:bg-gray-700 focus:bg-white dark:focus:bg-gray-600 border-gray-200 dark:border-gray-600 focus:border-primary focus:ring-primary/50"
-                    aria-label="Your Email"
-                  />
-                </motion.div>
+              <div className="space-y-2">
+                <label className="text-sm font-mono text-cyan-400">Email</label>
+                <Input
+                  type="email"
+                  name="email"
+                  value={formData.email}
+                  onChange={handleChange}
+                  required
+                  placeholder="john@example.com"
+                  className="bg-white/5 border-white/10 text-gray-100 placeholder:text-gray-500 focus:border-cyan-500 focus:ring-cyan-500/20 font-mono"
+                />
+              </div>
 
-                <motion.div variants={itemSlideUpVariants}>
-                  <label htmlFor="subject" className="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-1">
-                    Subject
-                  </label>
-                  <Input
-                    id="subject"
-                    name="subject"
-                    value={formData.subject}
-                    onChange={handleChange}
-                    placeholder="Project Inquiry"
-                    required
-                    className="w-full bg-gray-50 dark:bg-gray-700 focus:bg-white dark:focus:bg-gray-600 border-gray-200 dark:border-gray-600 focus:border-primary focus:ring-primary/50"
-                    aria-label="Subject"
-                  />
-                </motion.div>
+              <div className="space-y-2">
+                <label className="text-sm font-mono text-cyan-400">Subject</label>
+                <Input
+                  name="subject"
+                  value={formData.subject}
+                  onChange={handleChange}
+                  required
+                  placeholder="Project Discussion"
+                  className="bg-white/5 border-white/10 text-gray-100 placeholder:text-gray-500 focus:border-cyan-500 focus:ring-cyan-500/20 font-mono"
+                />
+              </div>
 
-                <motion.div variants={itemSlideUpVariants}>
-                  <label htmlFor="message" className="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-1">
-                    Your Message
-                  </label>
-                  <Textarea
-                    id="message"
-                    name="message"
-                    value={formData.message}
-                    onChange={handleChange}
-                    placeholder="Hello Ahmed, I'd like to discuss a project..."
-                    required
-                    className="w-full min-h-[120px] bg-gray-50 dark:bg-gray-700 focus:bg-white dark:focus:bg-gray-600 border-gray-200 dark:border-gray-600 focus:border-primary focus:ring-primary/50"
-                    aria-label="Your Message"
-                  />
-                </motion.div>
+              <div className="space-y-2">
+                <label className="text-sm font-mono text-cyan-400">Message</label>
+                <Textarea
+                  name="message"
+                  value={formData.message}
+                  onChange={handleChange}
+                  required
+                  placeholder="Tell me about your project..."
+                  rows={6}
+                  className="bg-white/5 border-white/10 text-gray-100 placeholder:text-gray-500 focus:border-cyan-500 focus:ring-cyan-500/20 font-mono resize-none"
+                />
+              </div>
 
-                <motion.div variants={itemSlideUpVariants}>
-                  <motion.div // Wrap the button for animation
-                    whileHover={{ scale: 1.03 }}
-                    whileTap={{ scale: 0.98 }}
-                  >
-                    <Button
-                      type="submit"
-                      className="w-full bg-gradient-to-r from-[#c66461] to-[#a682b0] hover:opacity-95 text-white flex items-center justify-center gap-2 rounded-lg py-3 shadow-md transition-all duration-300 hover:shadow-lg disabled:opacity-50 disabled:cursor-not-allowed"
-                      disabled={isSubmitting}
-                    >
-                      {isSubmitting ? (
-                        <motion.span initial={{ opacity: 0 }} animate={{ opacity: 1 }}>Sending...</motion.span>
-                      ) : (
-                        <motion.span 
-                          initial={{ opacity: 0 }} 
-                          animate={{ opacity: 1 }} 
-                          className="flex items-center gap-2"
-                        >
-                          Send Message 
-                          <motion.div 
-                            initial={{ x: 0 }} 
-                            animate={{ x: [0, 3, 0] }} 
-                            transition={{ repeat: Infinity, duration: 1.2, ease: "easeInOut" }}
-                          >
-                            <Send size={16} />
-                          </motion.div>
-                        </motion.span>
-                      )}
-                    </Button>
-                  </motion.div>
-                </motion.div>
+              <motion.div
+                whileHover={{ scale: 1.02 }}
+                whileTap={{ scale: 0.98 }}
+              >
+                <Button
+                  type="submit"
+                  disabled={isSubmitting}
+                  className="w-full btn-cyber font-mono text-sm py-6 flex items-center justify-center gap-2"
+                >
+                  {isSubmitting ? (
+                    <>
+                      <motion.div
+                        animate={{ rotate: 360 }}
+                        transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
+                        className="w-5 h-5 border-2 border-cyan-400 border-t-transparent rounded-full"
+                      />
+                      Sending...
+                    </>
+                  ) : (
+                    <>
+                      <Send className="w-4 h-4" />
+                      Send Message
+                    </>
+                  )}
+                </Button>
               </motion.div>
             </form>
           </motion.div>
-        </motion.div>
-      </div>
+        </div>
+      </motion.div>
     </section>
   )
 }

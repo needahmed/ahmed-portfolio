@@ -2,12 +2,8 @@
 
 import { useState, useEffect } from "react"
 import Link from "next/link"
-import { Menu, X, Sun, Moon } from "lucide-react"
-import { motion } from "framer-motion"
-import { Button } from "@/components/ui/button"
-import { useToast } from "@/components/ui/use-toast"
-import { useMobile } from "@/hooks/use-mobile"
-import { useTheme } from "next-themes"
+import { Menu, X, Download } from "lucide-react"
+import { motion, AnimatePresence } from "framer-motion"
 
 const navLinks = [
   { name: "Home", href: "#home" },
@@ -21,161 +17,176 @@ const navLinks = [
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false)
   const [scrolled, setScrolled] = useState(false)
-  const isMobile = useMobile()
-  const { toast } = useToast()
-  const { theme, setTheme } = useTheme()
-  const [mounted, setMounted] = useState(false)
-
-  useEffect(() => setMounted(true), [])
-
-  useEffect(() => {
-    if (!isMobile && isOpen) {
-      setIsOpen(false);
-    }
-  }, [isMobile, isOpen]);
+  const [activeSection, setActiveSection] = useState("home")
 
   useEffect(() => {
     const handleScroll = () => {
-      setScrolled(window.scrollY > 30);
+      setScrolled(window.scrollY > 50)
+
+      const sections = navLinks.map(link => link.href.substring(1))
+      const current = sections.find(section => {
+        const element = document.getElementById(section)
+        if (element) {
+          const rect = element.getBoundingClientRect()
+          return rect.top <= 100 && rect.bottom >= 100
+        }
+        return false
+      })
+      
+      if (current) setActiveSection(current)
     }
 
     window.addEventListener("scroll", handleScroll, { passive: true })
-    handleScroll();
+    handleScroll()
     return () => window.removeEventListener("scroll", handleScroll)
   }, [])
 
   const toggleMenu = () => setIsOpen(!isOpen)
 
-  const handleDownloadCV = () => {
-    toast({
-      title: "CV Download Initiated",
-      description: "Your download should start shortly.",
-    })
-  }
-
-  const toggleTheme = () => {
-    setTheme(theme === "light" ? "dark" : "light")
-  }
-
-  const navVariants = {
-    hidden: { y: -100, opacity: 0 },
-    visible: { y: 0, opacity: 1, transition: { type: "spring", stiffness: 100, damping: 20 } },
-  };
-
-  const linkHoverVariant = {
-    hover: { scale: 1.1, color: "#a682b0", originX: 0 },
-    tap: { scale: 0.95 }
-  };
-
-  if (!mounted) {
-    return null;
-  }
-
   return (
-    <motion.nav
-      variants={navVariants}
-      initial="hidden"
-      animate="visible"
-      className={`fixed top-4 inset-x-0 mx-auto z-50 max-w-1xl md:max-w-2xl transition-all duration-300 ease-out 
-        ${scrolled 
-          ? "bg-white/80 dark:bg-gray-900/80 backdrop-blur-lg shadow-md rounded-lg border border-gray-200/50 dark:border-gray-700/50"
-          : "bg-transparent shadow-none rounded-lg border border-gray-200/30 dark:border-gray-700/30" 
-        } 
-        ${isOpen ? "rounded-b-none md:rounded-b-lg" : ""}
-      `}
-    >
-      <div className="px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-center items-center h-16">
-          {/* Removed the empty logo div */}
-
-          <div className="hidden md:flex items-center justify-center space-x-2 lg:space-x-4">
-            {navLinks.map((link) => (
-              <motion.div key={link.name} variants={linkHoverVariant} whileHover="hover" whileTap="tap">
-                <Link
-                  href={link.href}
-                  className="text-sm font-medium text-gray-600 dark:text-gray-300 hover:text-primary dark:hover:text-primary transition-colors"
-                >
-                  {link.name}
-                </Link>
+    <>
+      <motion.nav
+        initial={{ y: -100 }}
+        animate={{ y: 0 }}
+        transition={{ duration: 0.5 }}
+        className={`fixed top-4 left-1/2 -translate-x-1/2 z-50 transition-all duration-300 ${
+          scrolled ? "w-[95%] max-w-7xl" : "w-[90%] max-w-6xl"
+        }`}
+      >
+        <div className={`glass-card px-6 py-4 ${scrolled ? "neon-box" : ""}`}>
+          <div className="flex justify-between items-center">
+            <Link href="#home">
+              <motion.div
+                whileHover={{ scale: 1.05 }}
+                className="font-mono font-bold text-xl"
+              >
+                <span className="gradient-text">&lt;AP /&gt;</span>
               </motion.div>
-            ))}
-            <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-              <Button 
-                onClick={handleDownloadCV} 
-                size="sm" 
-                className="bg-gradient-to-r from-[#c66461] to-[#a682b0] hover:opacity-90 text-white rounded-full px-4 shadow-sm"
-              >
-                Download CV
-              </Button>
-            </motion.div>
-            <motion.div whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.9 }}>
-              <Button
-                variant="ghost"
-                size="icon"
-                onClick={toggleTheme}
-                className="rounded-full text-gray-600 dark:text-gray-300 hover:text-primary dark:hover:text-primary hover:bg-gray-100 dark:hover:bg-gray-800"
-                aria-label="Toggle theme"
-              >
-                {theme === 'light' ? <Moon size={18} /> : <Sun size={18} />}
-              </Button>
-            </motion.div>
-          </div>
+            </Link>
 
-          <div className="md:hidden flex items-center justify-between w-full">
-            {/* Theme toggle on the left for mobile */}
-            <motion.div whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.9 }}>
-              <Button
-                variant="ghost"
-                size="icon"
-                onClick={toggleTheme}
-                className="rounded-full text-gray-700 dark:text-gray-300 hover:text-primary dark:hover:text-primary hover:bg-gray-100 dark:hover:bg-gray-800"
-                aria-label="Toggle theme"
+            <div className="hidden md:flex items-center gap-1">
+              {navLinks.map((link) => (
+                <Link key={link.name} href={link.href}>
+                  <motion.div
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.95 }}
+                    className="relative px-4 py-2 font-mono text-sm"
+                  >
+                    <span className={`transition-colors ${
+                      activeSection === link.href.substring(1)
+                        ? "text-cyan-400"
+                        : "text-gray-400 hover:text-cyan-400"
+                    }`}>
+                      {link.name}
+                    </span>
+                    {activeSection === link.href.substring(1) && (
+                      <motion.div
+                        layoutId="activeSection"
+                        className="absolute bottom-0 left-0 right-0 h-[2px] bg-gradient-to-r from-cyan-400 to-purple-500"
+                        transition={{ type: "spring", stiffness: 380, damping: 30 }}
+                      />
+                    )}
+                  </motion.div>
+                </Link>
+              ))}
+            </div>
+
+            <div className="hidden md:flex items-center gap-3">
+              <motion.a
+                href="/CV.pdf"
+                download
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                className="btn-cyber flex items-center gap-2 text-sm py-2 px-4"
               >
-                {theme === 'light' ? <Moon size={20} /> : <Sun size={20} />}
-              </Button>
-            </motion.div>
-            
-            {/* Menu toggle on the right for mobile */}
-            <motion.button
+                <Download className="w-4 h-4" />
+                CV
+              </motion.a>
+            </div>
+
+            <button
               onClick={toggleMenu}
-              whileTap={{ scale: 0.85 }}
-              className="p-2 text-gray-700 dark:text-gray-300 hover:text-primary dark:hover:text-primary transition-colors rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary dark:focus:ring-offset-gray-900"
-              aria-label={isOpen ? "Close menu" : "Open menu"}
+              className="md:hidden text-cyan-400 hover:text-cyan-300 transition-colors p-2"
+              aria-label="Toggle menu"
             >
               {isOpen ? <X size={24} /> : <Menu size={24} />}
-            </motion.button>
+            </button>
           </div>
         </div>
-      </div>
+      </motion.nav>
 
-      <motion.div
-        initial={{ height: 0, opacity: 0 }}
-        animate={{ height: isOpen ? "auto" : 0, opacity: isOpen ? 1 : 0 }}
-        transition={{ duration: 0.3, ease: "easeInOut" }}
-        className={`md:hidden overflow-hidden ${scrolled || isOpen ? 'bg-white/95 dark:bg-gray-900/95 backdrop-blur-lg border-t border-gray-200/50 dark:border-gray-700/50 rounded-b-lg' : 'bg-transparent'} `}
-      >
-        <div className="px-4 pt-2 pb-4 space-y-2">
-          {navLinks.map((link) => (
-            <motion.div key={link.name} whileTap={{ scale: 0.97 }}>
-              <Link
-                href={link.href}
-                className="block py-2 px-3 rounded-md text-base font-medium text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-800 hover:text-primary dark:hover:text-primary transition-colors"
-                onClick={toggleMenu}
-              >
-                {link.name}
-              </Link>
-            </motion.div>
-          ))}
-          <motion.div className="pt-2" whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }}>
-            <Button 
-              onClick={() => { handleDownloadCV(); toggleMenu(); }}
-              className="w-full bg-gradient-to-r from-[#c66461] to-[#a682b0] hover:opacity-90 text-white rounded-full py-2 shadow-sm"
+      <AnimatePresence>
+        {isOpen && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-40 md:hidden"
+            onClick={toggleMenu}
+          >
+            <div className="absolute inset-0 bg-black/80 backdrop-blur-xl" />
+            
+            <motion.div
+              initial={{ x: "100%" }}
+              animate={{ x: 0 }}
+              exit={{ x: "100%" }}
+              transition={{ type: "spring", damping: 25 }}
+              className="absolute right-0 top-0 bottom-0 w-[80%] max-w-sm glass-card p-8"
+              onClick={(e) => e.stopPropagation()}
             >
-              Download CV
-            </Button>
+              <div className="flex justify-end mb-8">
+                <button
+                  onClick={toggleMenu}
+                  className="text-cyan-400 hover:text-cyan-300 transition-colors p-2"
+                >
+                  <X size={24} />
+                </button>
+              </div>
+
+              <nav className="space-y-6">
+                {navLinks.map((link, index) => (
+                  <motion.div
+                    key={link.name}
+                    initial={{ opacity: 0, x: 50 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ delay: index * 0.1 }}
+                  >
+                    <Link
+                      href={link.href}
+                      onClick={toggleMenu}
+                      className={`block text-2xl font-mono transition-colors ${
+                        activeSection === link.href.substring(1)
+                          ? "text-cyan-400"
+                          : "text-gray-400 hover:text-cyan-400"
+                      }`}
+                    >
+                      <span className="text-purple-500 mr-2">/</span>
+                      {link.name}
+                    </Link>
+                  </motion.div>
+                ))}
+
+                <motion.div
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.6 }}
+                  className="pt-6"
+                >
+                  <a
+                    href="/CV.pdf"
+                    download
+                    onClick={toggleMenu}
+                    className="btn-cyber flex items-center justify-center gap-2 w-full"
+                  >
+                    <Download className="w-4 h-4" />
+                    Download CV
+                  </a>
+                </motion.div>
+              </nav>
+            </motion.div>
           </motion.div>
-        </div>
-      </motion.div>
-    </motion.nav>
+        )}
+      </AnimatePresence>
+    </>
   )
 }

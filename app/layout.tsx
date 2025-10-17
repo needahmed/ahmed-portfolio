@@ -1,15 +1,14 @@
 import type React from "react"
 import type { Metadata } from "next"
-import { Inter, Poppins } from "next/font/google"
+import { Inter, JetBrains_Mono } from "next/font/google"
 import "./globals.css"
 import Navbar from "@/components/navbar"
-import { ThemeProvider } from "@/components/theme-provider"
+import { Toaster } from "@/components/ui/toaster"
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-inter" })
-const poppins = Poppins({
-  weight: ["300", "400", "500", "600", "700"],
+const jetbrainsMono = JetBrains_Mono({
   subsets: ["latin"],
-  variable: "--font-poppins",
+  variable: "--font-mono",
 })
 
 export const metadata: Metadata = {
@@ -29,18 +28,13 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   return (
-    <html lang="en" suppressHydrationWarning>
-      <body className={`${inter.variable} ${poppins.variable} font-sans`}>
-        <ThemeProvider attribute="class" defaultTheme="light" enableSystem disableTransitionOnChange>
-          <div className="flex justify-center w-full">
-            <Navbar/>
-          </div>
-          {children}
-        </ThemeProvider>
+    <html lang="en" suppressHydrationWarning className="dark">
+      <body className={`${inter.variable} ${jetbrainsMono.variable} font-sans antialiased`}>
+        <div className="fixed inset-0 -z-10 grid-bg opacity-50" />
+        <Navbar/>
+        {children}
+        <Toaster />
       </body>
     </html>
   )
 }
-
-
-import './globals.css'

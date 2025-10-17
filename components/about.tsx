@@ -2,195 +2,214 @@
 
 import { useRef } from "react"
 import { motion, useInView } from "framer-motion"
-import { GraduationCap, Briefcase, Code, Lightbulb, LucideProps } from "lucide-react"
-import React from "react"
+import { GraduationCap, Briefcase, Code, Lightbulb, User, Cpu } from "lucide-react"
+import Tilt from "react-parallax-tilt"
 
-// Staggering variants
-const containerStaggerVariants = {
-  hidden: { opacity: 0 },
-  visible: {
-    opacity: 1,
-    transition: {
-      staggerChildren: 0.2,
-      delayChildren: 0.1, // Start staggering after a slight delay
-    },
+const infoCards = [
+  {
+    icon: GraduationCap,
+    title: "Education",
+    text: "BSc Computer Science from Bahria University, Islamabad.",
+    color: "cyan",
   },
-};
+  {
+    icon: Briefcase,
+    title: "Experience",
+    text: "Senior Software Engineer specialized in full-stack development & team leadership.",
+    color: "purple",
+  },
+  {
+    icon: Code,
+    title: "Core Skills",
+    text: "Next.js, React, Node.js, TypeScript, SQL, Prisma, Tailwind CSS, DevOps.",
+    color: "green",
+  },
+  {
+    icon: Lightbulb,
+    title: "Interests",
+    text: "Exploring Web3, AI, History, Philosophy. Committed to continuous learning.",
+    color: "cyan",
+  },
+]
 
-const itemSlideUpVariants = {
-  hidden: { opacity: 0, y: 30 },
-  visible: { opacity: 1, y: 0, transition: { duration: 0.6, ease: "easeOut" } },
-};
-
-const itemSlideInLeftVariants = {
-  hidden: { opacity: 0, x: -30 },
-  visible: { opacity: 1, x: 0, transition: { duration: 0.6, ease: "easeOut" } },
-};
-
-const itemScaleInVariants = {
-  hidden: { opacity: 0, scale: 0.8 },
-  visible: { opacity: 1, scale: 1, transition: { duration: 0.5, ease: [0.6, -0.05, 0.01, 0.99] } }, // Added custom ease
-};
-
-// Line-by-line animation (can be applied to paragraphs)
-const lineVariants = {
-  hidden: { opacity: 0, y: 10 },
-  visible: { opacity: 1, y: 0, transition: { duration: 0.5 } },
-};
-
-// Define prop types for InfoCard
-interface InfoCardProps {
-  icon: React.ComponentType<LucideProps>; // Type for Lucide icon component
-  title: string;
-  text: string;
-  colorClass?: string; // Optional color class
-  delay?: number; // Optional delay (though not directly used in this version's animation)
-}
-
-// Individual Card component for cleaner structure and hover effect
-const InfoCard: React.FC<InfoCardProps> = ({ icon: Icon, title, text, colorClass, delay }) => {
-  const cardRef = useRef(null);
-  const isInView = useInView(cardRef, { once: true, amount: 0.5 }); // Trigger when 50% visible
-
-  return (
-    <motion.div
-      ref={cardRef}
-      variants={itemScaleInVariants} 
-      // Staggering is handled by the parent grid
-      initial="hidden" 
-      animate={isInView ? "visible" : "hidden"}
-      whileHover={{ y: -8, scale: 1.03, boxShadow: "0px 10px 20px rgba(0, 0, 0, 0.1)" }}
-      transition={{ type: "spring", stiffness: 300, damping: 15 }}
-      className="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-lg dark:shadow-gray-900/30 overflow-hidden h-full flex flex-col"
-    >
-      <motion.div 
-        whileHover={{ rotate: [0, 15, -10, 0], scale: 1.2 }} 
-        transition={{ duration: 0.5 }}
-        className="mb-4 w-fit"
-      >
-        <Icon className={`${colorClass || "text-primary"}`} size={32} />
-      </motion.div>
-      <h4 className="text-lg font-semibold mb-2 text-gray-800 dark:text-gray-100">{title}</h4>
-      <p className="text-gray-600 dark:text-gray-300 text-sm leading-relaxed flex-grow">{text}</p>
-    </motion.div>
-  );
-};
+const stats = [
+  { label: "Years Experience", value: "5+", icon: Cpu },
+  { label: "Projects Completed", value: "50+", icon: Code },
+  { label: "Technologies", value: "20+", icon: Briefcase },
+  { label: "Team Members Led", value: "10+", icon: User },
+]
 
 export default function About() {
   const sectionRef = useRef(null)
-  const sectionInView = useInView(sectionRef, { once: true, amount: 0.2 }) // Trigger earlier for section container
-
-  const textContent = [
-    "Embarking on my journey in Computer Science at Bahria University, I swiftly realized my profound passion for full-stack web development. My favorite part of programming is the problem-solving aspect. I love the feeling of finally figuring out a solution to a problem.",
-    "My core stack is React, Next.js, Node.js, and SQL databases. I am also proficient with TypeScript, Prisma, and various other modern web technologies. As a Senior Software Engineer, I've led teams in developing scalable web solutions and optimizing application performance.",
-    "When I'm not coding, I enjoy watching podcasts or debates to keep myself updated. I also enjoy learning new things. I am currently exploring history, philosophy, and religion to broaden my perspectives.",
-  ];
+  const isInView = useInView(sectionRef, { once: true, amount: 0.2 })
 
   return (
-    <section id="about" className="section-padding bg-gradient-to-b from-white to-gray-100 dark:from-gray-900 dark:to-gray-950 overflow-hidden">
-      <motion.div 
+    <section id="about" className="section-padding relative overflow-hidden">
+      <div className="absolute inset-0 bg-gradient-to-b from-transparent via-cyan-500/5 to-transparent" />
+
+      <motion.div
         ref={sectionRef}
-        variants={containerStaggerVariants} // Use stagger for the whole section
-        initial="hidden"
-        animate={sectionInView ? "visible" : "hidden"}
-        className="max-w-6xl mx-auto"
+        initial={{ opacity: 0 }}
+        animate={isInView ? { opacity: 1 } : { opacity: 0 }}
+        className="max-w-7xl mx-auto relative z-10"
       >
-        <motion.div variants={itemSlideUpVariants} className="text-center mb-16">
-          <h2 className="text-3xl md:text-4xl font-bold mb-4 text-gray-800 dark:text-white">About Me</h2>
-          <motion.div 
-            className="w-20 h-1 bg-gradient-to-r from-[#c66461] to-[#a682b0] mx-auto mb-8 origin-left"
-            initial={{ scaleX: 0 }}
-            animate={{ scaleX: sectionInView ? 1 : 0 }}
-            transition={{ duration: 0.8, delay: 0.2, ease: "easeOut" }}
-          />
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 30 }}
+          transition={{ duration: 0.6 }}
+          className="text-center mb-16"
+        >
+          <div className="flex items-center justify-center gap-2 mb-4">
+            <span className="font-mono text-purple-400 text-sm">&lt;/&gt;</span>
+            <span className="font-mono text-cyan-400 text-sm">About Me</span>
+          </div>
+
+          <h2 className="text-4xl md:text-5xl font-bold mb-4 font-mono">
+            <span className="gradient-text">Who I Am</span>
+          </h2>
+
+          <div className="flex justify-center mb-6">
+            <motion.div
+              initial={{ width: 0 }}
+              animate={isInView ? { width: 100 } : { width: 0 }}
+              transition={{ duration: 0.8, delay: 0.3 }}
+              className="h-1 bg-gradient-to-r from-cyan-400 via-purple-500 to-green-400"
+            />
+          </div>
         </motion.div>
 
-        <motion.div 
-          variants={containerStaggerVariants} // Stagger the two columns
-          className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-start"
-        >
-          {/* Text Column */}
-          <motion.div variants={itemSlideInLeftVariants}>
-            <motion.h3 
-              variants={itemSlideUpVariants} // Reuse slide up for heading
-              className="text-2xl lg:text-3xl font-semibold mb-6 inline-block"
-            >
-              <motion.span
-                className="animated-gradient-text"
-                style={{
-                    background: 'linear-gradient(90deg, #c66461, #a682b0, #eca17a, #a682b0, #c66461)',
-                    backgroundSize: '200% 100%',
-                    WebkitBackgroundClip: 'text',
-                    WebkitTextFillColor: 'transparent',
-                }}
-                animate={{ backgroundPosition: ['0% 50%', '200% 50%'] }}
-                transition={{ 
-                    duration: 5, 
-                    repeat: Infinity, 
-                    repeatType: "reverse",
-                    ease: "linear",
-                    delay: 0.5 // Delay gradient animation start
-                }}
-              >
+        <div className="grid lg:grid-cols-2 gap-12 mb-16">
+          <motion.div
+            initial={{ opacity: 0, x: -50 }}
+            animate={isInView ? { opacity: 1, x: 0 } : { opacity: 0, x: -50 }}
+            transition={{ duration: 0.6, delay: 0.2 }}
+            className="space-y-6"
+          >
+            <div className="glass-card p-8">
+              <h3 className="text-2xl font-bold mb-4 font-mono gradient-text">
                 My Journey
-              </motion.span>
-            </motion.h3>
-            <motion.div 
-              variants={containerStaggerVariants} // Stagger paragraphs/lines
-              className="space-y-5"
+              </h3>
+
+              <div className="space-y-4 text-gray-300 leading-relaxed">
+                <p>
+                  Embarking on my journey in Computer Science at{" "}
+                  <span className="text-cyan-400 font-mono">Bahria University</span>, I swiftly
+                  realized my profound passion for full-stack web development. My favorite part of
+                  programming is the{" "}
+                  <span className="text-purple-400 font-mono">problem-solving aspect</span>. I love
+                  the feeling of finally figuring out a solution to a problem.
+                </p>
+
+                <p>
+                  My core stack is{" "}
+                  <span className="text-cyan-400 font-mono">
+                    React, Next.js, Node.js, and SQL databases
+                  </span>
+                  . I am also proficient with TypeScript, Prisma, and various other modern web
+                  technologies. As a Senior Software Engineer, I've led teams in developing scalable
+                  web solutions and optimizing application performance.
+                </p>
+
+                <p>
+                  When I'm not coding, I enjoy watching podcasts or debates to keep myself updated.
+                  I also enjoy learning new things. I am currently exploring{" "}
+                  <span className="text-green-400 font-mono">
+                    history, philosophy, and religion
+                  </span>{" "}
+                  to broaden my perspectives.
+                </p>
+              </div>
+            </div>
+
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
+              transition={{ duration: 0.6, delay: 0.4 }}
+              className="grid grid-cols-2 gap-4"
             >
-              {textContent.map((paragraph, pIndex) => (
-                <motion.p 
-                  key={pIndex} 
-                  variants={itemSlideUpVariants} // Each paragraph slides up
-                  className="text-gray-700 dark:text-gray-300 leading-relaxed"
+              {stats.map((stat, index) => (
+                <div
+                  key={stat.label}
+                  className="glass-card p-6 text-center group hover:shadow-[0_0_20px_rgba(0,240,255,0.2)] transition-all duration-300"
                 >
-                  {paragraph} 
-                  {/* Alternatively, animate line by line: */}
-                  {/* {paragraph.split('\n').map((line, lIndex) => (
-                    <motion.span key={lIndex} variants={lineVariants} className="block">
-                      {line}
-                    </motion.span>
-                  ))} */}
-                </motion.p>
+                  <stat.icon className="w-8 h-8 mx-auto mb-3 text-cyan-400 group-hover:scale-110 transition-transform" />
+                  <div className="text-3xl font-bold font-mono gradient-text mb-1">
+                    {stat.value}
+                  </div>
+                  <div className="text-xs text-gray-400 font-mono">{stat.label}</div>
+                </div>
               ))}
             </motion.div>
           </motion.div>
 
-          {/* Info Cards Column */}
-          <motion.div 
-            variants={containerStaggerVariants} // Stagger the cards
+          <motion.div
+            initial={{ opacity: 0, x: 50 }}
+            animate={isInView ? { opacity: 1, x: 0 } : { opacity: 0, x: 50 }}
+            transition={{ duration: 0.6, delay: 0.3 }}
             className="grid grid-cols-1 sm:grid-cols-2 gap-6"
           >
-            <InfoCard 
-              icon={GraduationCap} 
-              title="Education" 
-              text="BSc Computer Science from Bahria University, Islamabad." 
-              colorClass="text-blue-500" 
-              delay={0.3}
-            />
-            <InfoCard 
-              icon={Briefcase} 
-              title="Experience" 
-              text="Senior Software Engineer specialized in full-stack development & team leadership."
-              colorClass="text-purple-500"
-              delay={0.4}
-            />
-            <InfoCard 
-              icon={Code} 
-              title="Core Skills" 
-              text="Next.js, React, Node.js, TypeScript, SQL, Prisma, Tailwind CSS, DevOps."
-              colorClass="text-green-500"
-              delay={0.5}
-            />
-            <InfoCard 
-              icon={Lightbulb} 
-              title="Interests" 
-              text="Exploring Web3, AI, History, Philosophy. Committed to continuous learning."
-              colorClass="text-yellow-500"
-              delay={0.6}
-            />
+            {infoCards.map((card, index) => (
+              <motion.div
+                key={card.title}
+                initial={{ opacity: 0, y: 20 }}
+                animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
+                transition={{ duration: 0.5, delay: 0.4 + index * 0.1 }}
+              >
+                <Tilt
+                  tiltMaxAngleX={10}
+                  tiltMaxAngleY={10}
+                  glareEnable={true}
+                  glareMaxOpacity={0.15}
+                  glareColor="#00F0FF"
+                  className="h-full"
+                >
+                  <div className="glass-card p-6 h-full flex flex-col group hover:shadow-[0_0_20px_rgba(0,240,255,0.2)] transition-all duration-300">
+                    <motion.div
+                      whileHover={{ rotate: 360, scale: 1.2 }}
+                      transition={{ duration: 0.5 }}
+                      className="mb-4"
+                    >
+                      <card.icon
+                        className={`w-10 h-10 ${
+                          card.color === "cyan"
+                            ? "text-cyan-400"
+                            : card.color === "purple"
+                            ? "text-purple-400"
+                            : "text-green-400"
+                        }`}
+                      />
+                    </motion.div>
+
+                    <h4 className="text-lg font-bold mb-3 font-mono text-cyan-400">
+                      {card.title}
+                    </h4>
+
+                    <p className="text-gray-400 text-sm leading-relaxed">{card.text}</p>
+                  </div>
+                </Tilt>
+              </motion.div>
+            ))}
           </motion.div>
+        </div>
+
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 30 }}
+          transition={{ duration: 0.6, delay: 0.6 }}
+          className="glass-card p-8 text-center"
+        >
+          <div className="inline-block">
+            <div className="font-mono text-sm text-gray-400 mb-2">
+              <span className="text-purple-400">const</span>{" "}
+              <span className="text-cyan-400">passion</span> ={" "}
+              <span className="text-green-400">"Building amazing web experiences"</span>;
+            </div>
+            <motion.div
+              animate={{ opacity: [1, 0.5, 1] }}
+              transition={{ duration: 2, repeat: Infinity }}
+              className="inline-block w-2 h-4 bg-cyan-400 ml-1"
+            />
+          </div>
         </motion.div>
       </motion.div>
     </section>

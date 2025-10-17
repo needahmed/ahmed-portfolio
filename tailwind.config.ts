@@ -52,10 +52,12 @@ const config = {
           DEFAULT: "hsl(var(--card))",
           foreground: "hsl(var(--card-foreground))",
         },
-        primary: "rgb(var(--primary) / <alpha-value>)",
-        secondary: "rgb(var(--secondary) / <alpha-value>)",
-        accent2: "rgb(var(--accent-2) / <alpha-value>)",
-        accent3: "rgb(var(--accent-3) / <alpha-value>)",
+        cyber: {
+          cyan: "rgb(var(--cyber-cyan) / <alpha-value>)",
+          purple: "rgb(var(--cyber-purple) / <alpha-value>)",
+          green: "rgb(var(--cyber-green) / <alpha-value>)",
+          space: "rgb(var(--deep-space) / <alpha-value>)",
+        },
       },
       borderRadius: {
         lg: "var(--radius)",
@@ -65,6 +67,7 @@ const config = {
       fontFamily: {
         sans: ["var(--font-inter)"],
         poppins: ["var(--font-poppins)"],
+        mono: ["JetBrains Mono", "Fira Code", "monospace"],
       },
       keyframes: {
         "accordion-down": {
@@ -75,10 +78,25 @@ const config = {
           from: { height: "var(--radix-accordion-content-height)" },
           to: { height: "0" },
         },
+        "pulse-glow": {
+          "0%, 100%": { opacity: "1" },
+          "50%": { opacity: "0.5" },
+        },
+        "float": {
+          "0%, 100%": { transform: "translateY(0px)" },
+          "50%": { transform: "translateY(-20px)" },
+        },
+        "slide-in": {
+          "0%": { transform: "translateX(-100%)", opacity: "0" },
+          "100%": { transform: "translateX(0)", opacity: "1" },
+        },
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
         "accordion-up": "accordion-up 0.2s ease-out",
+        "pulse-glow": "pulse-glow 2s cubic-bezier(0.4, 0, 0.6, 1) infinite",
+        "float": "float 6s ease-in-out infinite",
+        "slide-in": "slide-in 0.5s ease-out",
       },
     },
   },

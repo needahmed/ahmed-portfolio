@@ -3,99 +3,254 @@
 @tailwind utilities;
 
 :root {
-  --primary: 198 100 97;
-  --secondary: 236 161 122;
-  --accent: 166 130 176;
-  --accent-2: 201 114 69;
-  --accent-3: 184 114 116;
+  --cyber-cyan: 0 240 255;
+  --cyber-purple: 176 38 255;
+  --cyber-green: 0 255 65;
+  --deep-space: 10 10 15;
+  --neon-glow: 0 240 255;
 }
 
 @layer base {
+  * {
+    @apply border-border;
+  }
+  
   body {
-    @apply bg-white text-gray-900 dark:bg-gray-950 dark:text-gray-200 transition-colors duration-200;
+    @apply bg-[#0A0A0F] text-gray-100 overflow-x-hidden;
+    font-feature-settings: "rlig" 1, "calt" 1;
+    background-image: radial-gradient(ellipse 80% 50% at 50% -20%, rgba(0, 240, 255, 0.15), transparent);
+  }
+
+  ::selection {
+    @apply bg-cyan-500/30 text-cyan-100;
   }
 }
 
 @layer components {
   .gradient-text {
-    @apply bg-gradient-to-r from-[#c66461] via-[#a682b0] to-[#eca17a] bg-clip-text text-transparent;
+    @apply bg-gradient-to-r from-cyan-400 via-purple-500 to-green-400 bg-clip-text text-transparent;
+    background-size: 200% auto;
+    animation: gradientShift 3s ease infinite;
   }
 
-  .gradient-bg {
-    @apply bg-gradient-to-r from-[#c66461]/90 via-[#a682b0]/90 to-[#eca17a]/90;
+  .cyber-glow {
+    text-shadow: 0 0 10px rgb(var(--cyber-cyan) / 0.5),
+                 0 0 20px rgb(var(--cyber-cyan) / 0.3),
+                 0 0 30px rgb(var(--cyber-cyan) / 0.2);
   }
 
   .section-padding {
-    @apply py-20 px-4 md:px-8 lg:px-16 max-w-7xl mx-auto;
+    @apply py-20 px-4 md:px-8 lg:px-16 max-w-7xl mx-auto relative;
   }
 
-  .card-hover {
-    @apply transition-all duration-300 hover:shadow-lg hover:-translate-y-1;
+  .glass-card {
+    @apply bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl;
+    box-shadow: 0 8px 32px 0 rgba(0, 240, 255, 0.1);
   }
 
-  .btn-primary {
-    @apply px-6 py-3 bg-[#c66461] hover:bg-[#c66461]/90 text-white rounded-md transition-all duration-300 font-medium;
+  .holographic-border {
+    position: relative;
+    border: 1px solid transparent;
+    background: linear-gradient(#0A0A0F, #0A0A0F) padding-box,
+                linear-gradient(135deg, rgb(var(--cyber-cyan)) 0%, rgb(var(--cyber-purple)) 50%, rgb(var(--cyber-green)) 100%) border-box;
   }
 
-  .btn-secondary {
-    @apply px-6 py-3 border-2 border-[#a682b0] text-[#a682b0] hover:bg-[#a682b0]/10 rounded-md transition-all duration-300 font-medium dark:text-gray-200 dark:border-[#a682b0]/70 dark:hover:bg-[#a682b0]/20;
+  .btn-cyber {
+    @apply relative px-6 py-3 font-mono font-medium text-cyan-400 overflow-hidden;
+    @apply border border-cyan-500/50 rounded-lg transition-all duration-300;
+    @apply hover:border-cyan-400 hover:shadow-[0_0_20px_rgba(0,240,255,0.3)];
+    background: linear-gradient(135deg, rgba(0, 240, 255, 0.1) 0%, rgba(176, 38, 255, 0.1) 100%);
   }
-}
 
-.animate-fade-in {
-  animation: fadeIn 1s ease-in-out;
-}
-
-.animate-slide-up {
-  animation: slideUp 0.8s ease-out;
-}
-
-.animate-slide-in-right {
-  animation: slideInRight 0.8s ease-out;
-}
-
-.animate-slide-in-left {
-  animation: slideInLeft 0.8s ease-out;
-}
-
-@keyframes fadeIn {
-  from {
+  .btn-cyber::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, rgba(0, 240, 255, 0.2), rgba(176, 38, 255, 0.2));
     opacity: 0;
+    transition: opacity 0.3s;
   }
-  to {
+
+  .btn-cyber:hover::before {
     opacity: 1;
   }
+
+  .terminal-cursor {
+    @apply inline-block w-2 h-5 bg-cyan-400 ml-1;
+    animation: blink 1s step-end infinite;
+  }
+
+  .grid-bg {
+    background-image: 
+      linear-gradient(rgba(0, 240, 255, 0.1) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(0, 240, 255, 0.1) 1px, transparent 1px);
+    background-size: 50px 50px;
+    background-position: 0 0, 0 0;
+  }
+
+  .neon-box {
+    box-shadow: 
+      0 0 5px rgba(0, 240, 255, 0.5),
+      0 0 10px rgba(0, 240, 255, 0.3),
+      0 0 15px rgba(0, 240, 255, 0.2),
+      inset 0 0 10px rgba(0, 240, 255, 0.1);
+  }
+
+  .glitch {
+    position: relative;
+  }
+
+  .glitch::before,
+  .glitch::after {
+    content: attr(data-text);
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+  }
+
+  .glitch::before {
+    left: 2px;
+    text-shadow: -2px 0 #ff00c1;
+    clip: rect(44px, 450px, 56px, 0);
+    animation: glitch-anim 5s infinite linear alternate-reverse;
+  }
+
+  .glitch::after {
+    left: -2px;
+    text-shadow: -2px 0 #00fff9;
+    clip: rect(44px, 450px, 56px, 0);
+    animation: glitch-anim2 5s infinite linear alternate-reverse;
+  }
+
+  .scanlines {
+    position: relative;
+    overflow: hidden;
+  }
+
+  .scanlines::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+      transparent 50%,
+      rgba(0, 240, 255, 0.03) 50%
+    );
+    background-size: 100% 4px;
+    pointer-events: none;
+    animation: scanline 8s linear infinite;
+  }
 }
 
-@keyframes slideUp {
-  from {
-    transform: translateY(50px);
-    opacity: 0;
+@keyframes gradientShift {
+  0%, 100% {
+    background-position: 0% 50%;
   }
-  to {
-    transform: translateY(0);
-    opacity: 1;
+  50% {
+    background-position: 100% 50%;
   }
 }
 
-@keyframes slideInRight {
-  from {
-    transform: translateX(50px);
-    opacity: 0;
-  }
-  to {
-    transform: translateX(0);
+@keyframes blink {
+  0%, 50% {
     opacity: 1;
+  }
+  51%, 100% {
+    opacity: 0;
   }
 }
 
-@keyframes slideInLeft {
-  from {
-    transform: translateX(-50px);
-    opacity: 0;
+@keyframes glitch-anim {
+  0% {
+    clip: rect(10px, 9999px, 31px, 0);
   }
-  to {
-    transform: translateX(0);
-    opacity: 1;
+  10% {
+    clip: rect(70px, 9999px, 71px, 0);
   }
+  20% {
+    clip: rect(30px, 9999px, 90px, 0);
+  }
+  30% {
+    clip: rect(50px, 9999px, 10px, 0);
+  }
+  40% {
+    clip: rect(90px, 9999px, 40px, 0);
+  }
+  50% {
+    clip: rect(20px, 9999px, 80px, 0);
+  }
+  60% {
+    clip: rect(60px, 9999px, 50px, 0);
+  }
+  70% {
+    clip: rect(5px, 9999px, 95px, 0);
+  }
+  80% {
+    clip: rect(85px, 9999px, 15px, 0);
+  }
+  90% {
+    clip: rect(35px, 9999px, 65px, 0);
+  }
+  100% {
+    clip: rect(75px, 9999px, 25px, 0);
+  }
+}
+
+@keyframes glitch-anim2 {
+  0% {
+    clip: rect(65px, 9999px, 100px, 0);
+  }
+  10% {
+    clip: rect(20px, 9999px, 40px, 0);
+  }
+  20% {
+    clip: rect(80px, 9999px, 30px, 0);
+  }
+  30% {
+    clip: rect(10px, 9999px, 70px, 0);
+  }
+  40% {
+    clip: rect(50px, 9999px, 20px, 0);
+  }
+  50% {
+    clip: rect(90px, 9999px, 60px, 0);
+  }
+  60% {
+    clip: rect(40px, 9999px, 85px, 0);
+  }
+  70% {
+    clip: rect(75px, 9999px, 45px, 0);
+  }
+  80% {
+    clip: rect(15px, 9999px, 55px, 0);
+  }
+  90% {
+    clip: rect(55px, 9999px, 5px, 0);
+  }
+  100% {
+    clip: rect(95px, 9999px, 35px, 0);
+  }
+}
+
+@keyframes scanline {
+  0% {
+    transform: translateY(-100%);
+  }
+  100% {
+    transform: translateY(100%);
+  }
+}
+
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-20px);
+  }
+}
+
+.animate-float {
+  animation: float 6s ease-in-out infinite;
 }

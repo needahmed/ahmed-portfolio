@@ -1,6 +1,6 @@
 "use client"
 
-import { motion } from "framer-motion";
+import { motion } from "framer-motion"
 import Hero from "@/components/hero"
 import About from "@/components/about"
 import Projects from "@/components/projects"
@@ -9,76 +9,57 @@ import Experience from "@/components/experience"
 import Contact from "@/components/contact"
 import Footer from "@/components/footer"
 
-const sectionVariants = {
-  hidden: { opacity: 0, y: 50 },
-  visible: { opacity: 1, y: 0, transition: { duration: 0.6, ease: "easeOut" } },
-};
-
 export default function Home() {
   return (
-    <main className="min-h-screen bg-gradient-to-b from-white to-gray-50 dark:from-gray-900 dark:to-gray-950 flex flex-col items-center overflow-x-hidden">
+    <main className="min-h-screen relative">
+      <Hero />
+      
       <motion.div
-        initial="hidden"
-        animate="visible"
-        variants={sectionVariants}
-        className="w-full"
-      >
-        <Hero />
-      </motion.div>
-      <motion.div
-        initial="hidden"
-        whileInView="visible"
-        viewport={{ once: true, amount: 0.2 }}
-        variants={sectionVariants}
-        className="w-full flex justify-center"
+        initial={{ opacity: 0 }}
+        whileInView={{ opacity: 1 }}
+        viewport={{ once: true, amount: 0.1 }}
+        transition={{ duration: 0.6 }}
       >
         <About />
       </motion.div>
+
       <motion.div
-        initial="hidden"
-        whileInView="visible"
-        viewport={{ once: true, amount: 0.2 }}
-        variants={sectionVariants}
-        className="w-full flex justify-center"
+        initial={{ opacity: 0 }}
+        whileInView={{ opacity: 1 }}
+        viewport={{ once: true, amount: 0.1 }}
+        transition={{ duration: 0.6 }}
       >
         <Projects />
       </motion.div>
+
       <motion.div
-        initial="hidden"
-        whileInView="visible"
-        viewport={{ once: true, amount: 0.2 }}
-        variants={sectionVariants}
-        className="w-full flex justify-center"
+        initial={{ opacity: 0 }}
+        whileInView={{ opacity: 1 }}
+        viewport={{ once: true, amount: 0.1 }}
+        transition={{ duration: 0.6 }}
       >
         <Skills />
       </motion.div>
+
       <motion.div
-        initial="hidden"
-        whileInView="visible"
-        viewport={{ once: true, amount: 0.2 }}
-        variants={sectionVariants}
-        className="w-full flex justify-center"
+        initial={{ opacity: 0 }}
+        whileInView={{ opacity: 1 }}
+        viewport={{ once: true, amount: 0.1 }}
+        transition={{ duration: 0.6 }}
       >
         <Experience />
       </motion.div>
+
       <motion.div
-        initial="hidden"
-        whileInView="visible"
-        viewport={{ once: true, amount: 0.2 }}
-        variants={sectionVariants}
-        className="w-full flex justify-center"
+        initial={{ opacity: 0 }}
+        whileInView={{ opacity: 1 }}
+        viewport={{ once: true, amount: 0.1 }}
+        transition={{ duration: 0.6 }}
       >
         <Contact />
       </motion.div>
-      <motion.div
-        initial="hidden"
-        whileInView="visible"
-        viewport={{ once: true, amount: 0.2 }}
-        variants={sectionVariants}
-        className="w-full flex justify-center"
-      >
-        <Footer />
-      </motion.div>
+
+      <Footer />
     </main>
   )
 }

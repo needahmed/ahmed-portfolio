@@ -1,64 +1,38 @@
 "use client"
 
-import React, { useRef, useEffect, useState } from "react"
+import { useRef, useEffect, useState } from "react"
 import { motion, useInView, useAnimation } from "framer-motion"
-import { Progress } from "@/components/ui/progress"
+import { Code, Database, Blocks, Wrench, Cpu } from "lucide-react"
 
-// --- Reusable Animation Variants ---
-const containerStaggerVariants = {
-  hidden: { opacity: 0 },
-  visible: (delayChildren = 0) => ({
-    opacity: 1,
-    transition: {
-      staggerChildren: 0.15,
-      delayChildren: delayChildren, // Allow passing delay
-    },
-  }),
-};
-
-const itemSlideUpVariants = {
-  hidden: { opacity: 0, y: 30 },
-  visible: { opacity: 1, y: 0, transition: { duration: 0.5, ease: "easeOut" } },
-};
-
-const itemScaleInVariants = {
-  hidden: { opacity: 0, scale: 0.9 },
-  visible: { 
-    opacity: 1, 
-    scale: 1, 
-    transition: { duration: 0.5, ease: [0.6, -0.05, 0.01, 0.99] } 
-  },
-};
-
-// --- Skill Data ---
 const skillCategories = [
   {
-    name: "Frontend Development",
-    gradient: "from-blue-500 to-cyan-400",
+    name: "Frontend",
+    icon: Code,
+    color: "cyan",
     skills: [
       { name: "React", level: 95 },
       { name: "Next.js", level: 90 },
       { name: "TypeScript", level: 85 },
-      { name: "JavaScript", level: 95 },
-      { name: "HTML/CSS", level: 90 },
       { name: "Tailwind CSS", level: 90 },
+      { name: "Framer Motion", level: 85 },
     ],
   },
   {
-    name: "Backend Development",
-    gradient: "from-purple-500 to-pink-500",
+    name: "Backend",
+    icon: Database,
+    color: "purple",
     skills: [
       { name: "Node.js", level: 85 },
       { name: "Express", level: 80 },
       { name: "Prisma", level: 85 },
-      { name: "MySQL", level: 80 },
-      { name: "PostgreSQL", level: 75 },
+      { name: "PostgreSQL", level: 80 },
       { name: "MongoDB", level: 80 },
     ],
   },
   {
-    name: "Blockchain Development",
-    gradient: "from-green-500 to-teal-400",
+    name: "Blockchain",
+    icon: Blocks,
+    color: "green",
     skills: [
       { name: "Solidity", level: 75 },
       { name: "Rust", level: 65 },
@@ -68,158 +42,203 @@ const skillCategories = [
     ],
   },
   {
-    name: "Other Skills",
-    gradient: "from-yellow-500 to-orange-400",
+    name: "Tools & Other",
+    icon: Wrench,
+    color: "cyan",
     skills: [
-      { name: "Python", level: 70 },
-      { name: "Machine Learning", level: 60 },
-      { name: "C/C++", level: 65 },
-      { name: "Java", level: 60 },
       { name: "Git", level: 85 },
-      { name: "XML", level: 75 },
+      { name: "Docker", level: 75 },
+      { name: "AWS", level: 70 },
+      { name: "Python", level: 70 },
+      { name: "C/C++", level: 65 },
     ],
   },
 ]
 
-// --- Animated Progress Bar Component ---
-interface AnimatedProgressProps {
-  value: number;
-  indicatorClassName?: string;
-  className?: string;
+interface AnimatedSkillBarProps {
+  name: string
+  level: number
+  color: string
+  delay: number
 }
 
-const AnimatedProgress: React.FC<AnimatedProgressProps> = ({ 
-  value, 
-  indicatorClassName = "bg-primary", 
-  className 
-}) => {
-  const [currentValue, setCurrentValue] = useState(0);
-  const controls = useAnimation();
-  const ref = useRef(null);
-  const isInView = useInView(ref, { once: true, amount: 0.5 });
+function AnimatedSkillBar({ name, level, color, delay }: AnimatedSkillBarProps) {
+  const [currentValue, setCurrentValue] = useState(0)
+  const controls = useAnimation()
+  const ref = useRef(null)
+  const isInView = useInView(ref, { once: true, amount: 0.5 })
 
   useEffect(() => {
     if (isInView) {
       controls.start({
-        width: `${value}%`,
-        transition: { duration: 1, ease: "easeOut", delay: 0.2 }, // Animate width
-      });
-      // Animate the percentage text (optional, for effect)
+        width: `${level}%`,
+        transition: { duration: 1.2, ease: "easeOut", delay },
+      })
+
       const interval = setInterval(() => {
         setCurrentValue((prev) => {
-          if (prev < value) {
-            return Math.min(prev + Math.ceil(value / 50), value); // Increment towards value
+          if (prev < level) {
+            return Math.min(prev + Math.ceil(level / 40), level)
           }
-          clearInterval(interval);
-          return value;
-        });
-      }, 20); // Control speed of text animation
-      return () => clearInterval(interval);
+          clearInterval(interval)
+          return level
+        })
+      }, 30)
+      
+      return () => clearInterval(interval)
     }
-  }, [isInView, value, controls]);
+  }, [isInView, level, controls, delay])
+
+  const colorClasses = {
+    cyan: "from-cyan-500 to-cyan-300",
+    purple: "from-purple-500 to-pink-500",
+    green: "from-green-500 to-emerald-400",
+  }
 
   return (
-    <div ref={ref} className="relative w-full">
-      <Progress value={0} className={`h-2 ${className}`} /> {/* Background track */} 
-      <motion.div 
-        className={`absolute top-0 left-0 h-2 rounded-full ${indicatorClassName}`} 
-        initial={{ width: "0%" }}
-        animate={controls}
-      />
-      <span className="absolute -top-5 right-0 text-xs font-medium text-gray-500 tabular-nums">
-        {currentValue}%
-      </span>
+    <div ref={ref} className="group">
+      <div className="flex justify-between mb-2">
+        <span className="text-sm font-mono text-gray-300 group-hover:text-cyan-400 transition-colors">
+          {name}
+        </span>
+        <span className="text-xs font-mono text-cyan-400 tabular-nums">
+          {currentValue}%
+        </span>
+      </div>
+      <div className="relative h-2 bg-white/5 rounded-full overflow-hidden">
+        <motion.div
+          className={`absolute top-0 left-0 h-full bg-gradient-to-r ${
+            colorClasses[color as keyof typeof colorClasses]
+          } rounded-full shadow-[0_0_10px_rgba(0,240,255,0.5)]`}
+          initial={{ width: "0%" }}
+          animate={controls}
+        />
+      </div>
     </div>
-  );
-};
+  )
+}
 
-// --- Skills Component ---
 export default function Skills() {
   const sectionRef = useRef(null)
-  const sectionInView = useInView(sectionRef, { once: true, amount: 0.1 })
-
-  const titleRef = useRef(null)
-  const titleInView = useInView(titleRef, { once: true, amount: 0.5 })
+  const isInView = useInView(sectionRef, { once: true, amount: 0.1 })
 
   return (
-    <section id="skills" className="section-padding bg-gradient-to-b from-gray-50 to-white dark:from-gray-950 dark:to-gray-900 overflow-hidden">
-      <div ref={sectionRef} className="max-w-6xl mx-auto">
+    <section id="skills" className="section-padding relative overflow-hidden">
+      <div className="absolute inset-0 bg-gradient-to-b from-transparent via-green-500/5 to-transparent" />
+
+      <motion.div
+        ref={sectionRef}
+        initial={{ opacity: 0 }}
+        animate={isInView ? { opacity: 1 } : { opacity: 0 }}
+        className="max-w-7xl mx-auto relative z-10"
+      >
         <motion.div
-          ref={titleRef}
-          initial="hidden"
-          animate={titleInView ? "visible" : "hidden"}
-          variants={containerStaggerVariants}
+          initial={{ opacity: 0, y: 30 }}
+          animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 30 }}
+          transition={{ duration: 0.6 }}
           className="text-center mb-16"
         >
-          <motion.h2 variants={itemSlideUpVariants} className="text-3xl md:text-4xl font-bold mb-4 text-gray-800 dark:text-white">My Skills</motion.h2>
-          <motion.div 
-            className="w-20 h-1 bg-gradient-to-r from-[#c66461] to-[#a682b0] mx-auto mb-6 origin-center"
-            initial={{ scaleX: 0 }}
-            animate={{ scaleX: titleInView ? 1 : 0 }}
-            transition={{ duration: 0.7, delay: 0.1, ease: "easeOut" }}
-          />
-          <motion.p variants={itemSlideUpVariants} className="text-gray-600 dark:text-gray-300 max-w-2xl mx-auto leading-relaxed">
-            I've developed a diverse set of skills throughout my career. Here's a comprehensive overview of my technical
-            expertise.
-          </motion.p>
+          <div className="flex items-center justify-center gap-2 mb-4">
+            <motion.div
+              animate={{ scale: [1, 1.2, 1] }}
+              transition={{ duration: 2, repeat: Infinity }}
+            >
+              <Cpu className="w-6 h-6 text-green-400" />
+            </motion.div>
+            <span className="font-mono text-green-400 text-sm">Technical Expertise</span>
+          </div>
+
+          <h2 className="text-4xl md:text-5xl font-bold mb-4 font-mono">
+            <span className="gradient-text">Skills & Technologies</span>
+          </h2>
+
+          <div className="flex justify-center mb-6">
+            <motion.div
+              initial={{ width: 0 }}
+              animate={isInView ? { width: 100 } : { width: 0 }}
+              transition={{ duration: 0.8, delay: 0.3 }}
+              className="h-1 bg-gradient-to-r from-cyan-400 via-purple-500 to-green-400"
+            />
+          </div>
+
+          <p className="text-gray-400 max-w-2xl mx-auto">
+            A comprehensive toolkit built through years of hands-on experience in modern web
+            development, blockchain, and cloud technologies.
+          </p>
         </motion.div>
 
-        <motion.div 
-          variants={containerStaggerVariants}
-          initial="hidden"
-          animate={sectionInView ? "visible" : "hidden"}
-          className="grid grid-cols-1 md:grid-cols-2 gap-8 lg:gap-10"
-        >
-          {skillCategories.map((category, categoryIndex) => (
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+          {skillCategories.map((category, catIndex) => (
             <motion.div
               key={category.name}
-              variants={itemScaleInVariants} // Card scale-in animation
-              whileHover={{ y: -5, boxShadow: "0px 10px 20px rgba(0, 0, 0, 0.07)" }}
-              transition={{ type: "spring", stiffness: 300, damping: 15 }}
-              className="bg-white dark:bg-gray-800 p-6 lg:p-8 rounded-xl shadow-lg border border-gray-100 dark:border-gray-700"
+              initial={{ opacity: 0, y: 50 }}
+              animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 50 }}
+              transition={{ duration: 0.5, delay: catIndex * 0.1 }}
             >
-              <motion.h3 
-                variants={itemSlideUpVariants} 
-                className="text-xl lg:text-2xl font-semibold mb-6 inline-block"
-              >
-                <span
-                  className={`bg-gradient-to-r ${category.gradient} bg-clip-text text-transparent`}
-                  // Add subtle background animation if desired
-                  // style={{ backgroundSize: '200% 100%' }}
-                  // animate={{ backgroundPosition: ['0% 50%', '200% 50%'] }}
-                  // transition={{ duration: 6, repeat: Infinity, repeatType: "reverse", ease: "linear" }}
-                >
-                  {category.name}
-                </span>
-              </motion.h3>
-              <motion.div 
-                variants={containerStaggerVariants} // Stagger skill items
-                initial="hidden"
-                // Animate when card is visible (will inherit from parent, but explicit better)
-                animate={sectionInView ? "visible" : "hidden"} 
-                custom={0.3 + categoryIndex * 0.1} // Add delay based on category index
-                className="space-y-5"
-              >
-                {category.skills.map((skill) => (
+              <div className="glass-card p-8 h-full hover:shadow-[0_0_30px_rgba(0,240,255,0.2)] transition-all duration-300">
+                <div className="flex items-center gap-3 mb-6">
                   <motion.div
-                    key={skill.name}
-                    variants={itemSlideUpVariants} // Animate each skill item
+                    whileHover={{ rotate: 360, scale: 1.2 }}
+                    transition={{ duration: 0.5 }}
+                    className={`p-3 rounded-lg ${
+                      category.color === "cyan"
+                        ? "bg-cyan-500/10"
+                        : category.color === "purple"
+                        ? "bg-purple-500/10"
+                        : "bg-green-500/10"
+                    }`}
                   >
-                    <div className="flex justify-between mb-1">
-                      <span className="text-sm font-medium text-gray-700 dark:text-gray-200">{skill.name}</span>
-                      {/* Percentage text moved inside AnimatedProgress */}
-                    </div>
-                    <AnimatedProgress
-                      value={skill.level}
-                      indicatorClassName={`bg-gradient-to-r ${category.gradient}`}
+                    <category.icon
+                      className={`w-6 h-6 ${
+                        category.color === "cyan"
+                          ? "text-cyan-400"
+                          : category.color === "purple"
+                          ? "text-purple-400"
+                          : "text-green-400"
+                      }`}
                     />
                   </motion.div>
-                ))}
-              </motion.div>
+                  <h3 className="text-xl font-bold font-mono gradient-text">
+                    {category.name}
+                  </h3>
+                </div>
+
+                <div className="space-y-6">
+                  {category.skills.map((skill, skillIndex) => (
+                    <AnimatedSkillBar
+                      key={skill.name}
+                      name={skill.name}
+                      level={skill.level}
+                      color={category.color}
+                      delay={0.3 + catIndex * 0.1 + skillIndex * 0.05}
+                    />
+                  ))}
+                </div>
+              </div>
             </motion.div>
           ))}
+        </div>
+
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 30 }}
+          transition={{ duration: 0.6, delay: 0.8 }}
+          className="mt-12 glass-card p-8 text-center"
+        >
+          <div className="inline-block">
+            <div className="font-mono text-sm text-gray-400">
+              <span className="text-purple-400">while</span> (
+              <span className="text-cyan-400">alive</span>) {"{ "}
+              <span className="text-green-400">learn</span>(); {" }"}
+            </div>
+            <motion.div
+              animate={{ opacity: [1, 0.5, 1] }}
+              transition={{ duration: 2, repeat: Infinity }}
+              className="inline-block w-2 h-4 bg-cyan-400 ml-1"
+            />
+          </div>
         </motion.div>
-      </div>
+      </motion.div>
     </section>
   )
 }
