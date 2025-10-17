@@ -49,11 +49,9 @@ export default function Navbar() {
         initial={{ y: -100 }}
         animate={{ y: 0 }}
         transition={{ duration: 0.5 }}
-        className={`fixed top-4 left-1/2 -translate-x-1/2 z-50 transition-all duration-300 ${
-          scrolled ? "w-[95%] max-w-7xl" : "w-[90%] max-w-6xl"
-        }`}
+        className="fixed top-4 left-4 right-4 z-50 transition-all duration-300"
       >
-        <div className={`glass-card px-6 py-4 ${scrolled ? "neon-box" : ""}`}>
+        <div className={`glass-card px-6 py-4 mx-auto ${scrolled ? "neon-box max-w-7xl" : "max-w-6xl"}`}>
           <div className="flex justify-between items-center">
             <Link href="#home">
               <motion.div
