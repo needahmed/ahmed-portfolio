@@ -1,7 +1,6 @@
 "use client"
 
 import { useRef } from "react"
-import Image from "next/image"
 import { motion, useInView } from "framer-motion"
 import Tilt from "react-parallax-tilt"
 import { Badge } from "@/components/ui/badge"
@@ -13,11 +12,11 @@ const projects = [
     title: "Kupi Dashboard",
     description:
       "A comprehensive dashboard application built with Next.js, React, and various modern web technologies. Features include interactive data visualization, calendar integration, and responsive design.",
-    image: "/kupidashboard.png",
+    image: "kupidashboard.png",
     tags: ["Next.js", "React", "TypeScript", "Tailwind CSS", "Prisma", "MongoDB"],
     links: {
-      demo: "#",
-      github: "#",
+      demo: "https://kupi.africa",
+      github: "/unavailable",
     },
   },
   {
@@ -25,11 +24,11 @@ const projects = [
     title: "Kupi Chatbot",
     description:
       "An intelligent chatbot solution integrated with Twilio WhatsApp API. Built with serverless architecture using AWS Lambda and API Gateway, featuring OpenAI integration for natural language processing.",
-    image: "/kupibot.png",
+    image: "kupibot.png",
     tags: ["Node.js", "Serverless", "AWS", "Twilio", "OpenAI", "Prisma"],
     links: {
-      demo: "#",
-      github: "#",
+      demo: "https://kupi.africa",
+      github: "/unavailable",
     },
   },
   {
@@ -37,11 +36,11 @@ const projects = [
     title: "SkillSprint",
     description:
       "Co-founded and developed a platform providing personalized career recommendations through AI and learning paths to help users achieve their career goals.",
-    image: "/skillsprint.png",
+    image: "skillsprint.png",
     tags: ["Next.js", "React", "Tailwind CSS", "TypeScript", "Machine Learning"],
     links: {
-      demo: "#",
-      github: "#",
+      demo: "https://skill-sprint-delta.vercel.app/",
+      github: "https://github.com/needahmed/SkillSprint",
     },
   },
   {
@@ -49,11 +48,11 @@ const projects = [
     title: "AI SaaS",
     description:
       "A comprehensive AI SaaS project with capabilities for generating text, images, music, and videos through AI integration. Features subscription management with Stripe.",
-    image: "/AI-SaaS.png",
+    image: "AI-SaaS.png",
     tags: ["Next.js", "React", "Stripe", "Tailwind CSS", "AI APIs"],
     links: {
-      demo: "#",
-      github: "#",
+      demo: "/unavailable",
+      github: "/unavailable",
     },
   },
   {
@@ -61,11 +60,11 @@ const projects = [
     title: "Full Stack E-Commerce Store",
     description:
       "A scalable e-commerce application built using Next.js with integrated routing, database management with Prisma, and responsive design with Tailwind CSS.",
-    image: "/ecommerce.png",
+    image: "ecommerce.png",
     tags: ["React", "Next.js", "Prisma", "MySQL", "Tailwind CSS"],
     links: {
-      demo: "#",
-      github: "#",
+      demo: "/unavailable",
+      github: "https://github.com/needahmed/ecommerce-store",
     },
   },
   {
@@ -73,11 +72,11 @@ const projects = [
     title: "BaytOrganic E-Commerce with CMS",
     description:
       "An e-commerce platform for organic products with a custom content management system for easy product and content management.",
-    image: "/Baytorganic.png",
+    image: "Baytorganic.png",
     tags: ["Next.js", "React", "CMS", "Tailwind CSS", "PostgreSQL"],
     links: {
-      demo: "#",
-      github: "#",
+      demo: "https://baytorganic.com",
+      github: "https://github.com/needahmed/bayt-organic",
     },
   },
 ]
@@ -150,16 +149,13 @@ export default function Projects() {
                 className="h-full"
               >
                 <div className="glass-card p-6 h-full flex flex-col group hover:shadow-[0_0_30px_rgba(0,240,255,0.3)] transition-all duration-300">
-                  <div className="relative h-48 mb-4 rounded-lg overflow-hidden">
-                    <div className="absolute inset-0 holographic-border rounded-lg z-10" />
-                    <Image
-                      src={project.image || "/placeholder.svg"}
+                  <div className="relative h-48 mb-4 rounded-lg overflow-hidden bg-gray-900 holographic-border">
+                    <img
+                      src={`/${project.image}`}
                       alt={project.title}
-                      fill
-                      className="object-cover group-hover:scale-110 transition-transform duration-500"
-                      sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                      className="absolute inset-0 w-full h-full object-cover group-hover:scale-110 transition-transform duration-500 z-0"
                     />
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent pointer-events-none z-20" />
                   </div>
 
                   <h3 className="text-xl font-bold mb-3 font-mono text-cyan-400 group-hover:text-cyan-300 transition-colors">

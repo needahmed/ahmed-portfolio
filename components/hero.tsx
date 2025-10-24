@@ -340,7 +340,19 @@ function CodeAnimation() {
 }
 
 function FloatingParticles() {
-  const particles = Array.from({ length: 30 }, (_, i) => ({
+  const [particles, setParticles] = useState<Array<{
+    id: number;
+    x: number;
+    y: number;
+    duration: number;
+    delay: number;
+    size: number;
+  }>>([])
+
+  useEffect(() => {
+    // Generate particles only on client side to avoid hydration mismatch
+    setParticles(
+      Array.from({ length: 30 }, (_, i) => ({
     id: i,
     x: Math.random() * 100,
     y: Math.random() * 100,
@@ -348,6 +360,8 @@ function FloatingParticles() {
     delay: Math.random() * 2,
     size: 2 + Math.random() * 3,
   }))
+    )
+  }, [])
 
   return (
     <div className="absolute inset-0 overflow-hidden pointer-events-none">
