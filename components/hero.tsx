@@ -105,12 +105,12 @@ export default function Hero() {
                 <div className="flex items-center gap-2 text-purple-400 font-mono text-sm">
                   <Code2 className="w-4 h-4" />
                   <span className="text-gray-400">role:</span>
-                  <span className="text-green-400">Senior Software Engineer</span>
+                  <span className="text-green-400">Senior Full-Stack Engineer</span>
                 </div>
                 <div className="flex items-center gap-2 text-purple-400 font-mono text-sm">
                   <Sparkles className="w-4 h-4" />
                   <span className="text-gray-400">expertise:</span>
-                  <span className="text-green-400">Full Stack Development</span>
+                  <span className="text-green-400">Fintech · Payments · Full stack</span>
                 </div>
               </motion.div>
             </div>
@@ -121,8 +121,11 @@ export default function Hero() {
               transition={{ delay: 1.8 }}
               className="text-lg text-gray-300 leading-relaxed max-w-xl"
             >
-              Crafting responsive, engaging web applications with a passion for clean code
-              and cutting-edge technologies. Specialized in React, Next.js, and Node.js ecosystems.
+              Senior Full-Stack Engineer, building {" "}
+              <span className="text-cyan-400 font-mono">global fintech
+              products</span>, with polished React/Next.js experiences backed by production APIs, PostgreSQL +
+              Prisma, and payment infrastructure. I care about system design, provider integrations,
+              and secure flows where great UX and disciplined engineering move together.
             </motion.p>
 
             <motion.div
@@ -218,16 +221,16 @@ function CodeAnimation() {
   const codeLines = [
     "const developer = {",
     "  name: 'Ahmed Pervez',",
-    "  role: 'Senior Engineer',",
-    "  skills: ['React', 'Node.js'],",
-    "  passion: 'Building great UX'",
+    "  role: 'Senior Full-Stack Engineer',",
+    "  skills: ['React', 'NestJS', 'PostgreSQL'],",
+    "  passion: 'Payments that feel simple behind the scenes'",
     "};",
     "",
     "function createAmazingThings() {",
-    "  return innovation + creativity;",
+    "  return productSense + platformDepth;",
     "}",
     "",
-    "// Always learning, always coding",
+    "// Always learning, always shipping",
   ]
 
   return (

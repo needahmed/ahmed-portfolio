@@ -7,10 +7,28 @@ import { Calendar, MapPin, Briefcase, GraduationCap, Award } from "lucide-react"
 const experiences = [
   {
     type: "work",
+    title: "Senior Full-Stack Engineer",
+    company: "Sorbet",
+    location: "Remote",
+    period: "Jan 2026 - Present",
+    description:
+      "Designed and maintained a production NestJS API powering a fintech platform handling invoices, recipients, transactions, and multi-currency payments. Architected and evolved a PostgreSQL + Prisma schema with complex relational models (Users, Invoices, Recipients, customers, Virtual Accounts). Integrated external payment providers including Bridge and Due Network for USD/EUR virtual accounts, ACH, SEPA, SWIFT, and crypto settlement. Built secure KYC and TOS flows, webhook processors, and signature verification logic for financial events.",
+    technologies: [
+      "NestJS",
+      "PostgreSQL",
+      "Prisma",
+      "Bridge",
+      "Due Network",
+      "Webhooks",
+      "KYC",
+    ],
+  },
+  {
+    type: "work",
     title: "Senior Software Engineer",
     company: "VQode",
     location: "Remote",
-    period: "Aug 2024 - Present",
+    period: "Aug 2024 - Dec 2025",
     description:
       "Spearheaded full-stack application development using Next.js, React, and Node.js. Managed end-to-end database architecture and optimization. Led the design and implementation of scalable web solutions. Collaborated cross-functionally to enhance application performance and user experience.",
     technologies: ["Next.js", "React", "Node.js", "Database Architecture", "Team Leadership"],

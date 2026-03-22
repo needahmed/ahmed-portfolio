@@ -15,19 +15,19 @@ const infoCards = [
   {
     icon: Briefcase,
     title: "Experience",
-    text: "Senior Software Engineer specialized in full-stack development & team leadership.",
+    text: "Senior Full-Stack Engineer at Sorbet, fintech APIs, payments infrastructure, end-to-end delivery.",
     color: "purple",
   },
   {
     icon: Code,
     title: "Core Skills",
-    text: "Next.js, React, Node.js, TypeScript, SQL, Prisma, Tailwind CSS, DevOps.",
+    text: "Next.js, React, NestJS, Node.js, TypeScript, PostgreSQL, Prisma, Tailwind CSS, systems design.",
     color: "green",
   },
   {
     icon: Lightbulb,
     title: "Interests",
-    text: "Exploring Web3, AI, History, Philosophy. Committed to continuous learning.",
+    text: "Web3 & fintech, podcasts and debates, history, philosophy, religion, and always learning.",
     color: "cyan",
   },
 ]
@@ -92,31 +92,35 @@ export default function About() {
 
               <div className="space-y-4 text-gray-300 leading-relaxed">
                 <p>
-                  Embarking on my journey in Computer Science at{" "}
-                  <span className="text-cyan-400 font-mono">Bahria University</span>, I swiftly
-                  realized my profound passion for full-stack web development. My favorite part of
-                  programming is the{" "}
-                  <span className="text-purple-400 font-mono">problem-solving aspect</span>. I love
-                  the feeling of finally figuring out a solution to a problem.
+                  My path started in Computer Science at{" "}
+                  <span className="text-cyan-400 font-mono">Bahria University</span>, where I leaned
+                  hard into full-stack development. What still hooks me is{" "}
+                  <span className="text-purple-400 font-mono">problem-solving</span> turning fuzzy
+                  requirements into a design, then into code that holds up when real users and real
+                  constraints show up.
                 </p>
 
                 <p>
-                  My core stack is{" "}
+                  Today I'm a{" "}
+                  <span className="text-cyan-400 font-mono">Senior Full-Stack Engineer</span> at{" "}
+                  <span className="text-cyan-400 font-mono">Sorbet</span>, a fintech company
+                  building Web3-aligned payments: invoicing, settlement, multi-currency flows, and
+                  the APIs behind them. My stack spans{" "}
                   <span className="text-cyan-400 font-mono">
-                    React, Next.js, Node.js, and SQL databases
+                    React, Next.js, NestJS, PostgreSQL, and Prisma
                   </span>
-                  . I am also proficient with TypeScript, Prisma, and various other modern web
-                  technologies. As a Senior Software Engineer, I've led teams in developing scalable
-                  web solutions and optimizing application performance.
+                  , with a growing focus on system design, provider integrations, webhooks, and the
+                  verification patterns that come with moving value globally.
                 </p>
 
                 <p>
-                  When I'm not coding, I enjoy watching podcasts or debates to keep myself updated.
-                  I also enjoy learning new things. I am currently exploring{" "}
+                  When I'm not coding, I follow podcasts and debates to stay sharp. I'm also reading
+                  across{" "}
                   <span className="text-green-400 font-mono">
                     history, philosophy, and religion
-                  </span>{" "}
-                  to broaden my perspectives.
+                  </span>
+                  , with different lenses for thinking about people and systems, same curiosity I bring to
+                  engineering.
                 </p>
               </div>
             </div>
@@ -202,7 +206,7 @@ export default function About() {
             <div className="font-mono text-sm text-gray-400 mb-2">
               <span className="text-purple-400">const</span>{" "}
               <span className="text-cyan-400">passion</span> ={" "}
-              <span className="text-green-400">"Building amazing web experiences"</span>;
+              <span className="text-green-400">"Fintech products built to last"</span>;
             </div>
             <motion.div
               animate={{ opacity: [1, 0.5, 1] }}

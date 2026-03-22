@@ -8,6 +8,19 @@ import { ExternalLink, Github, Zap } from "lucide-react"
 
 const projects = [
   {
+    id: 7,
+    title: "Sorbet",
+    description:
+      "Global payments platform for businesses: multi-currency accounts, invoicing, and settlement. I build and maintain the production NestJS API, PostgreSQL + Prisma data model, integrations with payment providers (Bridge, Due Network), and secure KYC, webhooks, and financial event handling.",
+    image: "sorbet-app.png",
+    tags: ["NestJS", "PostgreSQL", "Prisma", "FinTech", "Payments", "Webhooks"],
+    links: {
+      demo: "https://mysorbet.io/",
+      github: "",
+    },
+    githubDisabled: true,
+  },
+  {
     id: 1,
     title: "Kupi Dashboard",
     description:
@@ -179,17 +192,28 @@ export default function Projects() {
                   </div>
 
                   <div className="flex gap-3 pt-4 border-t border-white/10">
-                    <motion.a
-                      href={project.links.github}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      whileHover={{ scale: 1.1, y: -2 }}
-                      whileTap={{ scale: 0.95 }}
-                      className="flex-1 flex items-center justify-center gap-2 px-4 py-2 bg-white/5 hover:bg-white/10 border border-white/10 rounded-lg transition-colors font-mono text-sm text-gray-300 hover:text-cyan-400"
-                    >
-                      <Github className="w-4 h-4" />
-                      Code
-                    </motion.a>
+                    {project.githubDisabled ? (
+                      <span
+                        className="flex-1 flex items-center justify-center gap-2 px-4 py-2 bg-white/5 border border-white/10 rounded-lg font-mono text-sm text-gray-500 cursor-not-allowed opacity-60"
+                        aria-disabled="true"
+                        title="Source not public"
+                      >
+                        <Github className="w-4 h-4" />
+                        Code
+                      </span>
+                    ) : (
+                      <motion.a
+                        href={project.links.github}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        whileHover={{ scale: 1.1, y: -2 }}
+                        whileTap={{ scale: 0.95 }}
+                        className="flex-1 flex items-center justify-center gap-2 px-4 py-2 bg-white/5 hover:bg-white/10 border border-white/10 rounded-lg transition-colors font-mono text-sm text-gray-300 hover:text-cyan-400"
+                      >
+                        <Github className="w-4 h-4" />
+                        Code
+                      </motion.a>
+                    )}
                     
                     <motion.a
                       href={project.links.demo}
