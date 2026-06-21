@@ -1,24 +1,24 @@
 import type { Config } from "tailwindcss"
+
 const config = {
   darkMode: ["class"],
   content: [
     "./pages/**/*.{ts,tsx}",
     "./components/**/*.{ts,tsx}",
     "./app/**/*.{ts,tsx}",
+    "./content/**/*.{ts,tsx}",
     "./src/**/*.{ts,tsx}",
-    "*.{js,ts,jsx,tsx,mdx}",
   ],
   prefix: "",
   theme: {
     container: {
       center: true,
-      padding: "2rem",
-      screens: {
-        "2xl": "1400px",
-      },
+      padding: "1.5rem",
+      screens: { "2xl": "1200px" },
     },
     extend: {
       colors: {
+        // shadcn/ui tokens (drive the imported primitives)
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",
         ring: "hsl(var(--ring))",
@@ -52,22 +52,41 @@ const config = {
           DEFAULT: "hsl(var(--card))",
           foreground: "hsl(var(--card-foreground))",
         },
-        cyber: {
-          cyan: "rgb(var(--cyber-cyan) / <alpha-value>)",
-          purple: "rgb(var(--cyber-purple) / <alpha-value>)",
-          green: "rgb(var(--cyber-green) / <alpha-value>)",
-          space: "rgb(var(--deep-space) / <alpha-value>)",
-        },
+
+        // ── Custom dark-luxe tokens (full color values, theme-aware) ──
+        canvas: "var(--bg)",
+        surface: "var(--surface)",
+        elevated: "var(--card-bg)",
+        hairline: "var(--hairline)",
+        "hairline-strong": "var(--hairline-strong)",
+        ink: "var(--text)",
+        "ink-2": "var(--text-secondary)",
+        "ink-3": "var(--text-muted)",
+        mint: "var(--accent)",
+        "mint-strong": "var(--accent-strong)",
+        "mint-soft": "var(--accent-soft)",
+        "mint-contrast": "var(--accent-contrast)",
       },
       borderRadius: {
         lg: "var(--radius)",
-        md: "calc(var(--radius) - 2px)",
-        sm: "calc(var(--radius) - 4px)",
+        md: "calc(var(--radius) - 4px)",
+        sm: "calc(var(--radius) - 8px)",
       },
       fontFamily: {
-        sans: ["var(--font-inter)"],
-        poppins: ["var(--font-poppins)"],
-        mono: ["JetBrains Mono", "Fira Code", "monospace"],
+        sans: ["var(--font-sans)", "ui-sans-serif", "system-ui", "sans-serif"],
+        mono: ["var(--font-mono)", "ui-monospace", "monospace"],
+      },
+      fontSize: {
+        // tightened display scale
+        "display-sm": ["clamp(2.4rem, 5vw, 3.4rem)", { lineHeight: "1.04", letterSpacing: "-0.03em" }],
+        display: ["clamp(2.8rem, 7vw, 5rem)", { lineHeight: "1.02", letterSpacing: "-0.035em" }],
+      },
+      maxWidth: {
+        content: "1120px",
+      },
+      boxShadow: {
+        card: "0 1px 0 0 rgba(255,255,255,0.04) inset, 0 20px 50px -30px rgba(0,0,0,0.7)",
+        glow: "0 0 60px -12px var(--glow)",
       },
       keyframes: {
         "accordion-down": {
@@ -78,25 +97,15 @@ const config = {
           from: { height: "var(--radix-accordion-content-height)" },
           to: { height: "0" },
         },
-        "pulse-glow": {
-          "0%, 100%": { opacity: "1" },
-          "50%": { opacity: "0.5" },
-        },
-        "float": {
-          "0%, 100%": { transform: "translateY(0px)" },
-          "50%": { transform: "translateY(-20px)" },
-        },
-        "slide-in": {
-          "0%": { transform: "translateX(-100%)", opacity: "0" },
-          "100%": { transform: "translateX(0)", opacity: "1" },
+        "aurora-drift": {
+          "0%, 100%": { transform: "translate3d(-2%, 0, 0) scale(1)" },
+          "50%": { transform: "translate3d(2%, -2%, 0) scale(1.06)" },
         },
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
         "accordion-up": "accordion-up 0.2s ease-out",
-        "pulse-glow": "pulse-glow 2s cubic-bezier(0.4, 0, 0.6, 1) infinite",
-        "float": "float 6s ease-in-out infinite",
-        "slide-in": "slide-in 0.5s ease-out",
+        "aurora-drift": "aurora-drift 16s ease-in-out infinite",
       },
     },
   },

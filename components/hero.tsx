@@ -1,395 +1,118 @@
 "use client"
 
-import { useEffect, useState, useRef } from "react"
-import { motion, useMotionValue, useSpring, useTransform } from "framer-motion"
-import { Download, Mail, Github, Linkedin, Twitter, Terminal, Code2, Sparkles } from "lucide-react"
+import { motion, useReducedMotion } from "framer-motion"
+import { ArrowDownToLine, ArrowUpRight } from "lucide-react"
+import { hero, site, socials } from "@/content/site"
+import { socialIcons } from "@/components/icons"
+import { Magnetic } from "@/components/magnetic"
+import { useSectionNav } from "@/components/section-nav"
+import { ease } from "@/lib/motion"
 
 export default function Hero() {
-  const [displayedText, setDisplayedText] = useState("")
-  const [showCursor, setShowCursor] = useState(true)
-  const fullText = "Ahmed Pervez"
-  const containerRef = useRef<HTMLDivElement>(null)
+  const reduce = useReducedMotion()
+  const { setActive } = useSectionNav()
 
-  const mouseX = useMotionValue(0)
-  const mouseY = useMotionValue(0)
-
-  const springX = useSpring(mouseX, { stiffness: 150, damping: 20 })
-  const springY = useSpring(mouseY, { stiffness: 150, damping: 20 })
-
-  useEffect(() => {
-    let currentIndex = 0
-    const typingInterval = setInterval(() => {
-      if (currentIndex <= fullText.length) {
-        setDisplayedText(fullText.slice(0, currentIndex))
-        currentIndex++
-      } else {
-        clearInterval(typingInterval)
-        setShowCursor(false)
+  const container = {
+    hidden: {},
+    show: { transition: { staggerChildren: 0.09, delayChildren: 0.05 } },
+  }
+  const item = reduce
+    ? { hidden: { opacity: 0 }, show: { opacity: 1, transition: { duration: 0.5 } } }
+    : {
+        hidden: { opacity: 0, y: 16 },
+        show: { opacity: 1, y: 0, transition: { duration: 0.6, ease } },
       }
-    }, 100)
-
-    return () => clearInterval(typingInterval)
-  }, [])
-
-  useEffect(() => {
-    const handleMouseMove = (e: MouseEvent) => {
-      if (!containerRef.current) return
-      const rect = containerRef.current.getBoundingClientRect()
-      mouseX.set(e.clientX - rect.left - rect.width / 2)
-      mouseY.set(e.clientY - rect.top - rect.height / 2)
-    }
-
-    window.addEventListener("mousemove", handleMouseMove)
-    return () => window.removeEventListener("mousemove", handleMouseMove)
-  }, [mouseX, mouseY])
-
-  const rotateX = useTransform(springY, [-300, 300], [5, -5])
-  const rotateY = useTransform(springX, [-300, 300], [-5, 5])
-
-  const socialLinks = [
-    { icon: Github, href: "https://github.com/needahmed", label: "GitHub" },
-    { icon: Linkedin, href: "https://www.linkedin.com/in/youneedahmed/", label: "LinkedIn" },
-    { icon: Twitter, href: "https://x.com/zedgaghost", label: "Twitter" },
-  ]
 
   return (
-    <section 
-      id="home" 
-      ref={containerRef}
-      className="relative min-h-screen flex items-center justify-center overflow-hidden pt-20 scanlines"
-    >
-      <div className="absolute inset-0 bg-gradient-to-b from-cyan-500/5 via-transparent to-purple-500/5" />
-      
-      <FloatingParticles />
+    <section id="home" className="relative overflow-hidden">
+      {/* Soft aurora glow behind the hero — low opacity, drifting */}
+      <div className="pointer-events-none absolute inset-0 -z-10" aria-hidden="true">
+        <div className="absolute left-1/2 top-[-10%] h-[520px] w-[820px] -translate-x-1/2 rounded-full bg-mint opacity-[0.12] blur-[120px] animate-aurora-drift" />
+        <div className="absolute left-[15%] top-[20%] h-[320px] w-[320px] rounded-full bg-mint opacity-[0.06] blur-[100px]" />
+      </div>
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 relative z-10">
-        <div className="grid lg:grid-cols-2 gap-16 items-center">
-          <motion.div
-            initial={{ opacity: 0, x: -50 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.8 }}
-            className="space-y-8"
+      <div className="section flex min-h-[80vh] flex-col justify-center py-16 md:py-24">
+        <motion.div variants={container} initial="hidden" animate="show" className="max-w-3xl">
+          <motion.p variants={item} className="eyebrow mb-6">
+            {site.eyebrow}
+          </motion.p>
+
+          <motion.h1
+            variants={item}
+            className="text-display font-semibold tracking-tight text-ink text-balance"
           >
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.2 }}
-              className="flex items-center gap-2 text-cyan-400 font-mono text-sm"
-            >
-              <Terminal className="w-4 h-4 animate-pulse" />
-              <span className="text-gray-400">~/portfolio</span>
-              <span className="text-purple-400">$</span>
-              <span className="text-cyan-400">whoami</span>
-            </motion.div>
+            {hero.headline}
+          </motion.h1>
 
-            <div>
-              <motion.h1 
-                className="text-5xl md:text-7xl font-bold mb-4 font-mono whitespace-nowrap"
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ delay: 0.3 }}
+          <motion.p
+            variants={item}
+            className="mt-7 max-w-2xl text-lg leading-relaxed text-ink-2 md:text-xl text-pretty"
+          >
+            {hero.subhead}
+          </motion.p>
+
+          <motion.div variants={item} className="mt-10 flex flex-wrap items-center gap-4">
+            <Magnetic>
+              <button
+                type="button"
+                onClick={() => setActive("work")}
+                className="group inline-flex items-center gap-2 rounded-full bg-mint px-6 py-3 text-sm font-medium text-mint-contrast shadow-glow transition-transform hover:-translate-y-0.5"
               >
-                <span className="text-gray-400">&gt; </span>
-                <span className="gradient-text cyber-glow">
-                  {displayedText}
-                </span>
-                {showCursor && <span className="terminal-cursor" />}
-              </motion.h1>
-              
-              <motion.div
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ delay: 1.5 }}
-                className="space-y-2"
-              >
-                <div className="flex items-center gap-2 text-purple-400 font-mono text-sm">
-                  <Code2 className="w-4 h-4" />
-                  <span className="text-gray-400">role:</span>
-                  <span className="text-green-400">Senior Full-Stack Engineer</span>
-                </div>
-                <div className="flex items-center gap-2 text-purple-400 font-mono text-sm">
-                  <Sparkles className="w-4 h-4" />
-                  <span className="text-gray-400">expertise:</span>
-                  <span className="text-green-400">Fintech · Payments · Full stack</span>
-                </div>
-              </motion.div>
-            </div>
-
-            <motion.p
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 1.8 }}
-              className="text-lg text-gray-300 leading-relaxed max-w-xl"
+                View work
+                <ArrowUpRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
+              </button>
+            </Magnetic>
+            <button
+              type="button"
+              onClick={() => setActive("contact")}
+              className="inline-flex items-center gap-2 rounded-full border border-hairline px-6 py-3 text-sm font-medium text-ink transition-colors hover:border-hairline-strong"
             >
-              Senior Full-Stack Engineer, building {" "}
-              <span className="text-cyan-400 font-mono">global fintech
-              products</span>, with polished React/Next.js experiences backed by production APIs, PostgreSQL +
-              Prisma, and payment infrastructure. I care about system design, provider integrations,
-              and secure flows where great UX and disciplined engineering move together.
-            </motion.p>
-
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 2.1 }}
-              className="flex flex-wrap gap-4"
+              Get in touch
+            </button>
+            <a
+              href={site.cv}
+              download
+              className="inline-flex items-center gap-1.5 px-2 py-3 text-sm text-ink-3 transition-colors hover:text-ink"
             >
-              <motion.a
-                href="#contact"
-                whileHover={{ scale: 1.05, boxShadow: "0 0 30px rgba(0, 240, 255, 0.4)" }}
-                whileTap={{ scale: 0.95 }}
-                className="btn-cyber group flex items-center gap-2"
-              >
-                <Mail className="w-4 h-4 group-hover:rotate-12 transition-transform" />
-                Contact Me
-              </motion.a>
+              <ArrowDownToLine className="h-4 w-4" />
+              Download CV
+            </a>
+          </motion.div>
 
-              <motion.a
-                href="/CV.pdf"
-                download
-                whileHover={{ scale: 1.05, boxShadow: "0 0 30px rgba(176, 38, 255, 0.4)" }}
-                whileTap={{ scale: 0.95 }}
-                className="btn-cyber group flex items-center gap-2"
-              >
-                <Download className="w-4 h-4 group-hover:translate-y-1 transition-transform" />
-                Download CV
-              </motion.a>
-            </motion.div>
-
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ delay: 2.4 }}
-              className="flex gap-4"
-            >
-              {socialLinks.map((social, index) => (
-                <motion.a
-                  key={social.label}
-                  href={social.href}
+          <motion.div variants={item} className="mt-10 flex items-center gap-3">
+            {socials.map((s) => {
+              const Icon = socialIcons[s.icon]
+              return (
+                <a
+                  key={s.label}
+                  href={s.href}
                   target="_blank"
                   rel="noopener noreferrer"
-                  whileHover={{ y: -5, scale: 1.1 }}
-                  whileTap={{ scale: 0.9 }}
-                  className="p-3 rounded-lg glass-card hover:bg-cyan-500/10 transition-colors group"
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 2.4 + index * 0.1 }}
+                  aria-label={s.label}
+                  className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-hairline text-ink-3 transition-colors hover:border-hairline-strong hover:text-mint"
                 >
-                  <social.icon className="w-5 h-5 text-cyan-400 group-hover:text-cyan-300" />
-                </motion.a>
-              ))}
-            </motion.div>
+                  <Icon className="h-[18px] w-[18px]" />
+                </a>
+              )
+            })}
           </motion.div>
-
-          <motion.div
-            initial={{ opacity: 0, scale: 0.8 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 1, delay: 0.5 }}
-            className="relative flex justify-center items-center"
-            style={{ perspective: 1000 }}
-          >
-            <motion.div
-              style={{ rotateX, rotateY }}
-              className="relative"
-            >
-              <CodeAnimation />
-            </motion.div>
-          </motion.div>
-        </div>
-      </div>
-
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ delay: 2.5 }}
-        className="absolute bottom-10 left-1/2 -translate-x-1/2"
-      >
-        <motion.div
-          animate={{ y: [0, 10, 0] }}
-          transition={{ duration: 2, repeat: Infinity }}
-          className="flex flex-col items-center gap-2 text-cyan-400/50 font-mono text-xs"
-        >
-          <span>scroll_down</span>
-          <div className="w-[1px] h-12 bg-gradient-to-b from-cyan-400/50 to-transparent" />
         </motion.div>
-      </motion.div>
-    </section>
-  )
-}
 
-function CodeAnimation() {
-  const codeLines = [
-    "const developer = {",
-    "  name: 'Ahmed Pervez',",
-    "  role: 'Senior Full-Stack Engineer',",
-    "  skills: ['React', 'NestJS', 'PostgreSQL'],",
-    "  passion: 'Payments that feel simple behind the scenes'",
-    "};",
-    "",
-    "function createAmazingThings() {",
-    "  return productSense + platformDepth;",
-    "}",
-    "",
-    "// Always learning, always shipping",
-  ]
-
-  return (
-    <div className="relative w-[300px] h-[300px] md:w-[400px] md:h-[400px] lg:w-[500px] lg:h-[500px]">
-      <div className="absolute inset-0 holographic-border rounded-3xl animate-pulse-glow" />
-      
-      <div className="absolute inset-4 rounded-2xl overflow-hidden glass-card backdrop-blur-xl bg-black/40">
-        <div className="absolute top-0 left-0 right-0 h-10 bg-gradient-to-b from-cyan-500/10 to-transparent border-b border-cyan-500/20 flex items-center px-4 gap-2">
-          <div className="w-3 h-3 rounded-full bg-red-500/70" />
-          <div className="w-3 h-3 rounded-full bg-yellow-500/70" />
-          <div className="w-3 h-3 rounded-full bg-green-500/70" />
-          <span className="ml-2 text-xs text-gray-400 font-mono">~/portfolio.tsx</span>
-        </div>
-        
-        <div className="absolute inset-0 top-10 p-6 font-mono text-sm overflow-hidden">
-          {codeLines.map((line, index) => (
-            <motion.div
-              key={index}
-              initial={{ opacity: 0, x: -20 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ delay: 0.5 + index * 0.1, duration: 0.5 }}
-              className="mb-2 flex items-start"
-            >
-              <span className="text-gray-500 mr-4 select-none min-w-[2ch]">
-                {line && (index + 1)}
-              </span>
-              <span className="text-cyan-400">
-                {line.includes('const') || line.includes('function') ? (
-                  <>
-                    <span className="text-purple-400">
-                      {line.split(' ')[0]}
-                    </span>
-                    {' ' + line.split(' ').slice(1).join(' ')}
-                  </>
-                ) : line.includes('//') ? (
-                  <span className="text-gray-500 italic">{line}</span>
-                ) : line.includes(':') && !line.includes('//') ? (
-                  <>
-                    <span className="text-green-400">
-                      {line.split(':')[0]}
-                    </span>
-                    <span className="text-gray-400">:</span>
-                    <span className="text-orange-400">
-                      {line.split(':').slice(1).join(':')}
-                    </span>
-                  </>
-                ) : (
-                  line
-                )}
-              </span>
-            </motion.div>
+        {/* Quiet credibility row — mono micro-labels, not vanity counters */}
+        <motion.ul
+          variants={item}
+          initial="hidden"
+          animate="show"
+          className="mt-16 flex flex-wrap items-center gap-x-3 gap-y-2 font-mono text-[12px] text-ink-3"
+        >
+          {hero.credibility.map((label, i) => (
+            <li key={label} className="flex items-center gap-3">
+              {i > 0 && <span className="h-1 w-1 rounded-full bg-hairline-strong" aria-hidden="true" />}
+              <span>{label}</span>
+            </li>
           ))}
-          
-          <motion.div
-            className="inline-block w-2 h-4 bg-cyan-400 ml-1"
-            animate={{ opacity: [1, 0, 1] }}
-            transition={{ duration: 1, repeat: Infinity }}
-          />
-        </div>
-        
-        <div className="absolute inset-0 bg-gradient-to-tr from-cyan-500/10 via-transparent to-purple-500/10 mix-blend-overlay pointer-events-none" />
-        
-        <motion.div
-          className="absolute inset-0 bg-gradient-to-r from-transparent via-cyan-400/10 to-transparent pointer-events-none"
-          animate={{
-            x: ["-100%", "100%"],
-          }}
-          transition={{
-            duration: 3,
-            repeat: Infinity,
-            repeatDelay: 2,
-            ease: "linear",
-          }}
-        />
-        
-        <motion.div
-          className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-32 h-32 border border-cyan-500/20 rounded-full pointer-events-none"
-          animate={{
-            scale: [1, 1.5, 1],
-            opacity: [0.3, 0, 0.3],
-          }}
-          transition={{
-            duration: 3,
-            repeat: Infinity,
-            ease: "easeInOut",
-          }}
-        />
+        </motion.ul>
       </div>
-
-      <div className="absolute -top-4 -right-4 w-24 h-24 bg-cyan-500/20 rounded-full blur-2xl animate-pulse" />
-      <div className="absolute -bottom-4 -left-4 w-32 h-32 bg-purple-500/20 rounded-full blur-2xl animate-pulse" />
-      
-      <motion.div
-        className="absolute top-10 right-10 text-cyan-400/30"
-        animate={{ rotate: 360 }}
-        transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
-      >
-        <Code2 className="w-12 h-12" />
-      </motion.div>
-      
-      <motion.div
-        className="absolute bottom-10 left-10 text-purple-400/30"
-        animate={{ rotate: -360 }}
-        transition={{ duration: 15, repeat: Infinity, ease: "linear" }}
-      >
-        <Terminal className="w-10 h-10" />
-      </motion.div>
-    </div>
-  )
-}
-
-function FloatingParticles() {
-  const [particles, setParticles] = useState<Array<{
-    id: number;
-    x: number;
-    y: number;
-    duration: number;
-    delay: number;
-    size: number;
-  }>>([])
-
-  useEffect(() => {
-    // Generate particles only on client side to avoid hydration mismatch
-    setParticles(
-      Array.from({ length: 30 }, (_, i) => ({
-    id: i,
-    x: Math.random() * 100,
-    y: Math.random() * 100,
-    duration: 3 + Math.random() * 4,
-    delay: Math.random() * 2,
-    size: 2 + Math.random() * 3,
-  }))
-    )
-  }, [])
-
-  return (
-    <div className="absolute inset-0 overflow-hidden pointer-events-none">
-      {particles.map((particle) => (
-        <motion.div
-          key={particle.id}
-          className="absolute rounded-full bg-cyan-400/30"
-          style={{
-            left: `${particle.x}%`,
-            top: `${particle.y}%`,
-            width: particle.size,
-            height: particle.size,
-          }}
-          animate={{
-            y: [0, -30, 0],
-            opacity: [0, 1, 0],
-          }}
-          transition={{
-            duration: particle.duration,
-            delay: particle.delay,
-            repeat: Infinity,
-            ease: "easeInOut",
-          }}
-        />
-      ))}
-    </div>
+    </section>
   )
 }

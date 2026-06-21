@@ -1,39 +1,70 @@
 import type React from "react"
-import type { Metadata } from "next"
-import { Inter, JetBrains_Mono } from "next/font/google"
+import type { Metadata, Viewport } from "next"
+import { Geist, Geist_Mono } from "next/font/google"
 import "./globals.css"
-import Navbar from "@/components/navbar"
+import { ThemeProvider } from "@/components/theme-provider"
 import { Toaster } from "@/components/ui/toaster"
+import { site } from "@/content/site"
 
-const inter = Inter({ subsets: ["latin"], variable: "--font-inter" })
-const jetbrainsMono = JetBrains_Mono({
-  subsets: ["latin"],
-  variable: "--font-mono",
-})
+const geist = Geist({ subsets: ["latin"], variable: "--font-sans", display: "swap" })
+const geistMono = Geist_Mono({ subsets: ["latin"], variable: "--font-mono", display: "swap" })
 
 export const metadata: Metadata = {
-  title: "Ahmed Pervez | Senior Software Engineer",
+  metadataBase: new URL(site.url),
+  title: {
+    default: `${site.name}, ${site.role}`,
+    template: `%s, ${site.name}`,
+  },
   description:
-    "Portfolio of Ahmed Pervez, a Senior Software Engineer specializing in Full Stack Development with Next.js, React, and Node.js",
-  icons: {
-    icon: '/favicon.ico',
-    shortcut: '/favicon.ico',
-    apple: '/apple-touch-icon.png',
-  }
+    "Ahmed Pervez is a senior full-stack engineer building and operating production fintech, SaaS and AI products end to end: multi-currency payment infrastructure, APIs, and the apps on top of them.",
+  keywords: [
+    "Ahmed Pervez",
+    "Senior Full-Stack Engineer",
+    "Fintech Engineer",
+    "Payments",
+    "NestJS",
+    "React Native",
+    "Next.js",
+    "TypeScript",
+  ],
+  authors: [{ name: site.name, url: site.url }],
+  creator: site.name,
+  alternates: { canonical: site.url },
+  openGraph: {
+    type: "website",
+    url: site.url,
+    title: `${site.name}, ${site.role}`,
+    description:
+      "Senior full-stack engineer building production fintech, SaaS and AI products end to end.",
+    siteName: site.name,
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: `${site.name}, ${site.role}`,
+    description:
+      "Senior full-stack engineer building production fintech, SaaS and AI products end to end.",
+    creator: "@zedgaghost",
+  },
 }
 
-export default function RootLayout({
-  children,
-}: {
-  children: React.ReactNode
-}) {
+export const viewport: Viewport = {
+  themeColor: [
+    { media: "(prefers-color-scheme: dark)", color: "#0a0a0b" },
+    { media: "(prefers-color-scheme: light)", color: "#fbfbfc" },
+  ],
+  colorScheme: "dark light",
+}
+
+export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en" suppressHydrationWarning className="dark">
-      <body className={`${inter.variable} ${jetbrainsMono.variable} font-sans antialiased`}>
-        <div className="fixed inset-0 -z-10 grid-bg opacity-50" />
-        <Navbar/>
-        {children}
-        <Toaster />
+    <html lang="en" suppressHydrationWarning className={`${geist.variable} ${geistMono.variable}`}>
+      <body className="font-sans antialiased">
+        <ThemeProvider attribute="class" defaultTheme="dark" enableSystem={false} disableTransitionOnChange>
+          {/* Film-grain overlay, felt not seen */}
+          <div className="pointer-events-none fixed inset-0 -z-10 grain" aria-hidden="true" />
+          {children}
+          <Toaster />
+        </ThemeProvider>
       </body>
     </html>
   )
