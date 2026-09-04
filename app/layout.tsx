@@ -16,10 +16,10 @@ export const metadata: Metadata = {
     template: `%s, ${site.name}`,
   },
   description:
-    "Ahmed Pervez is a senior full-stack engineer building and operating production fintech, SaaS and AI products end to end: multi-currency payment infrastructure, APIs, and the apps on top of them.",
+    "Ahmed Pervez is a lead software engineer building and operating production fintech, SaaS and AI products end to end: multi-currency payment infrastructure, APIs, and the apps on top of them.",
   keywords: [
     "Ahmed Pervez",
-    "Senior Full-Stack Engineer",
+    "Lead Software Engineer",
     "Fintech Engineer",
     "Payments",
     "NestJS",
@@ -35,14 +35,14 @@ export const metadata: Metadata = {
     url: site.url,
     title: `${site.name}, ${site.role}`,
     description:
-      "Senior full-stack engineer building production fintech, SaaS and AI products end to end.",
+      "Lead software engineer building production fintech, SaaS and AI products end to end.",
     siteName: site.name,
   },
   twitter: {
     card: "summary_large_image",
     title: `${site.name}, ${site.role}`,
     description:
-      "Senior full-stack engineer building production fintech, SaaS and AI products end to end.",
+      "Lead software engineer building production fintech, SaaS and AI products end to end.",
     creator: "@zedgaghost",
   },
 }

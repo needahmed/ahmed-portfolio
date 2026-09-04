@@ -11,7 +11,7 @@
 
 # Ahmed Pervez
 
-### Senior Full-Stack Engineer
+### Lead Software Engineer
 
 **Fintech · Payments · Production APIs · React / Next.js**
 
@@ -40,7 +40,7 @@ I turn ambiguous requirements into **designs and code that survive real users an
 
 | | |
 | :--- | :--- |
-| **Role** | Senior Full-Stack Engineer @ **[Sorbet](https://mysorbet.io/)** — Web3-aligned payments: invoicing, settlement, multi-currency, and the APIs behind them |
+| **Role** | Lead Software Engineer @ **[Sorbet](https://mysorbet.io/)** — Web3-aligned payments: invoicing, settlement, multi-currency, and the APIs behind them |
 | **Stack** | NestJS, PostgreSQL, Prisma, React, Next.js, TypeScript, Tailwind CSS |
 | **Themes** | Payment rails (e.g. Bridge, Due Network), webhooks, signature verification, KYC/TOS, relational modeling at scale |
 
@@ -81,7 +81,7 @@ _Portfolio (Next.js 15, React 19, Framer Motion): deploy and link **YOUR_PORTFOL
 
 ## Experience (snapshot)
 
-- **Sorbet** — Senior Full-Stack Engineer · _Jan 2026 – Present_ · Remote  
+- **Sorbet** — Lead Software Engineer · _Jan 2026 – Present_ · Remote  
 - **VQode** — Senior Software Engineer · _Aug 2024 – Dec 2025_ · Remote  
 - **Virtury Cloud** — Full-Stack Developer · _Aug 2023 – May 2024_ · Remote  
 

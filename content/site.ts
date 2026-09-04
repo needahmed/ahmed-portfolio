@@ -7,8 +7,8 @@ export const site = {
   name: "Ahmed Pervez",
   monogram: "AP",
   brand: "needahmed",
-  role: "Senior Full-Stack Engineer",
-  eyebrow: "Senior Full-Stack Engineer, Fintech & Payments",
+  role: "Lead Software Engineer",
+  eyebrow: "Lead Software Engineer, Fintech & Payments",
   email: "needahmed2@gmail.com",
   location: "Islamabad, Pakistan",
   domain: "needahmed.com",
@@ -24,7 +24,7 @@ export const hero = {
     "I build software that's calm, fast, and built to last.",
   ],
   subhead:
-    "I'm Ahmed Pervez, a senior full-stack engineer. I design, build, and operate production fintech, SaaS, and AI products end to end, from the data model to the interface on top of it.",
+    "I'm Ahmed Pervez, a lead software engineer. I design, build, and operate production fintech, SaaS, and AI products end to end, from the data model to the interface on top of it.",
   // Quiet credibility row — understated mono micro-labels, not vanity counters.
   credibility: ["$1M+ monthly volume", "3 currency corridors", "MENA region"],
 }
@@ -119,14 +119,14 @@ export const moreOnGitHub = "https://github.com/needahmed"
 // ─── About ───────────────────────────────────────────────────────────────────
 export const about = {
   paragraphs: [
-    "I'm a senior full-stack engineer with 4+ years building and operating production fintech, SaaS and AI products end to end, solo or in small teams. I like owning a problem from the data model all the way to the shipped UI.",
+    "I'm a lead software engineer with 4+ years building and operating production fintech, SaaS and AI products end to end, solo or in small teams. I like owning a problem from the data model all the way to the shipped UI.",
     "Most of my work lives close to money: multi-currency payment infrastructure spanning ACH, SEPA, SWIFT and stablecoin settlement, plus the APIs, dashboards and mobile apps on top of it. I care about systems that stay correct and stay up.",
     "Away from the editor I'm drawn to system design and the long arc of how things work, a curiosity that wanders into history and philosophy as readily as it does into a new codebase.",
   ],
   facts: [
     { label: "Based in", value: "Islamabad, Pakistan" },
     { label: "Education", value: "BSc Computer Science, Bahria University" },
-    { label: "Available for", value: "Senior / fintech roles" },
+    { label: "Available for", value: "Lead / fintech roles" },
   ],
 }
 
@@ -143,14 +143,15 @@ export type Role = {
 export const experience: Role[] = [
   {
     company: "Sorbet",
-    role: "Senior Full-Stack Engineer",
+    role: "Lead Software Engineer",
     period: "Jan 2026 to Present",
     location: "Remote",
     bullets: [
+      "Own engineering architecture, technical direction, code review and hiring, while mentoring engineers and introducing AI agent workflows that raised delivery speed and quality across the team.",
       "Design, build and operate a production NestJS payments API moving $1M+ in monthly volume across 3 corridors at 98% uptime.",
       "Shipped the iOS and Android app solo in React Native in 4 weeks, a single codebase covering auth, KYC, payments, recipients and transaction history.",
       "Integrated Bridge and DUE Network to settle via ACH, SEPA, SWIFT and on-chain stablecoin transfers, cutting average settlement time from 2 days to 8 hours.",
-      "Architected a 30+ entity PostgreSQL and Prisma data model with zero production data incidents.",
+      "Revamped payments, onboarding and dashboard flows end to end, increasing transaction volume by 160%.",
     ],
     tags: ["NestJS", "React Native", "PostgreSQL", "Payments"],
   },
@@ -231,5 +232,5 @@ export const skills: { group: string; items: string[] }[] = [
 export const contact = {
   heading: "Let's build something that lasts.",
   blurb:
-    "Open to senior and fintech engineering roles, and to interesting problems near the edge of money and software. The fastest way to reach me is email.",
+    "Open to lead and fintech engineering roles, and to interesting problems near the edge of money and software. The fastest way to reach me is email.",
 }

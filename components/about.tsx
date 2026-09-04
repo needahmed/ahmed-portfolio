@@ -11,7 +11,7 @@ export default function About() {
           <Reveal>
             <p className="eyebrow mb-4">About</p>
             <h2 className="text-display-sm font-semibold tracking-tight text-ink text-balance">
-              Senior engineer, end-to-end owner.
+              Lead engineer, end-to-end owner.
             </h2>
           </Reveal>
 
